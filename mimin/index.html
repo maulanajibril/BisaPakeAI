@@ -1,0 +1,1138 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mimin BisaPakeAI</title>
+<meta name="description" content="Mimin, asisten Social Media Management dan Corporate Content Creator dari seri BisaPakeAI.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5f2; --panel:#ffffff; --panel-2:#f1eee9; --ink:#1e1b2b; --ink-2:#5b5768; --line:#e4dfd8;
+  --brand:#e2475a; --brand-ink:#ffffff; --brand-soft:#fde8ea; --accent:#3b3a8f; --accent-soft:#e9e9fb;
+  --ok:#1f8a5b; --ok-soft:#e2f4ea; --warn:#a86a00; --warn-soft:#fdf1d8; --bad:#c0352b; --bad-soft:#fbe4e1;
+  --shadow:0 1px 2px rgba(30,27,43,.06),0 6px 20px rgba(30,27,43,.06); --r:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131220; --panel:#1c1b2c; --panel-2:#252438; --ink:#f1eff7; --ink-2:#aaa6bb; --line:#33314a;
+    --brand:#ff6476; --brand-ink:#1a0a0d; --brand-soft:#3a1c24; --accent:#a9a8ff; --accent-soft:#2a2950;
+    --ok:#4fd197; --ok-soft:#173326; --warn:#f0b54a; --warn-soft:#3a2d12; --bad:#ff7b6e; --bad-soft:#3d1c19;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131220; --panel:#1c1b2c; --panel-2:#252438; --ink:#f1eff7; --ink-2:#aaa6bb; --line:#33314a;
+  --brand:#ff6476; --brand-ink:#1a0a0d; --brand-soft:#3a1c24; --accent:#a9a8ff; --accent-soft:#2a2950;
+  --ok:#4fd197; --ok-soft:#173326; --warn:#f0b54a; --warn-soft:#3a2d12; --bad:#ff7b6e; --bad-soft:#3d1c19;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent)}
+.hidden{display:none!important}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+
+/* Gerbang lisensi */
+#gerbang{min-height:100vh;display:grid;place-items:center;padding:32px 16px}
+.kartu-gerbang{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.01em}
+.logo-ikon{width:36px;height:36px;border-radius:11px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-size:18px}
+.logo small{display:block;font-weight:600;font-size:12px;color:var(--ink-2);letter-spacing:0}
+.kartu-gerbang h1{font-size:22px;margin:22px 0 6px;letter-spacing:-.01em}
+.kartu-gerbang p{color:var(--ink-2);margin:0 0 18px}
+.pesan{border-radius:10px;padding:10px 12px;font-size:14px;margin:12px 0}
+.pesan.bad{background:var(--bad-soft);color:var(--bad)}
+.pesan.ok{background:var(--ok-soft);color:var(--ok)}
+.pesan.warn{background:var(--warn-soft);color:var(--warn)}
+.kecil{font-size:13px;color:var(--ink-2)}
+
+/* Form */
+label.f{display:block;margin:0 0 14px}
+label.f>span{display:block;font-weight:600;font-size:13.5px;margin-bottom:6px}
+label.f>span em{font-style:normal;font-weight:500;color:var(--ink-2)}
+input[type=text],input[type=email],input[type=number],input[type=password],select,textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:none;transition:border-color .15s}
+textarea{min-height:92px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer;text-decoration:none;color:var(--ink);transition:transform .05s,background .15s}
+.btn:hover{background:var(--panel-2)}
+.btn:active{transform:translateY(1px)}
+.btn.utama{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.utama:hover{filter:brightness(1.05);background:var(--brand)}
+.btn.penuh{width:100%}
+.btn.kecil{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.6;cursor:wait}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-size:13.5px;cursor:pointer;user-select:none}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+
+/* App */
+header.atas{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.atas .wrap{display:flex;align-items:center;gap:12px;height:60px}
+header.atas .logo{font-size:17px;cursor:pointer}
+header.atas .logo-ikon{width:30px;height:30px;font-size:15px;border-radius:9px}
+.spasi{flex:1}
+.pilih-brand{max-width:200px;padding:7px 10px;font-size:13.5px}
+.tombol-ikon{width:38px;height:38px;padding:0;border-radius:10px}
+main{padding:24px 0 64px}
+.sapa{display:grid;gap:18px;grid-template-columns:1.4fr 1fr;align-items:stretch;margin-bottom:26px}
+.sapa-teks{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.sapa-teks h1{margin:0 0 8px;font-size:24px;letter-spacing:-.015em;line-height:1.25}
+.sapa-teks p{margin:0 0 10px;color:var(--ink-2)}
+.status-brand{background:var(--accent-soft);border:1px solid transparent;border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:8px}
+.status-brand b{font-size:16px}
+.status-brand span.kecil{color:var(--ink-2)}
+h2.judul-bagian{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);margin:26px 0 12px;font-weight:700}
+.grid-alat{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.alat{display:flex;gap:12px;align-items:flex-start;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;transition:border-color .15s,transform .1s}
+.alat:hover{border-color:var(--brand);transform:translateY(-1px)}
+.alat .no{flex:none;width:36px;height:36px;border-radius:10px;background:var(--brand-soft);display:grid;place-items:center;font-size:18px}
+.alat b{display:block;font-size:14.5px;margin-bottom:2px}
+.alat span{display:block;font-size:13px;color:var(--ink-2);line-height:1.4}
+.alat .angka{font-size:11px;font-weight:700;color:var(--brand);letter-spacing:.04em}
+
+.halaman-alat{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+.panel h1{font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+.panel .lead{color:var(--ink-2);margin:0 0 18px}
+.kembali{background:none;border:0;color:var(--ink-2);padding:0;margin:0 0 14px;cursor:pointer;font-weight:600;font-size:14px}
+.kembali:hover{color:var(--ink)}
+.hasil{position:sticky;top:80px}
+.hasil textarea{min-height:360px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--panel-2)}
+.baris-tombol{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.kosong{border:1px dashed var(--line);border-radius:12px;padding:28px 18px;text-align:center;color:var(--ink-2)}
+.kosong .besar{font-size:30px;display:block;margin-bottom:6px}
+.tips{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:14px}
+.dua-kolom{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.statistik{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:6px}
+.stat{background:var(--panel-2);border-radius:12px;padding:12px}
+.stat .nilai{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.stat .ket{font-size:12.5px;color:var(--ink-2)}
+.lampu{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}
+.lampu.ok{background:var(--ok-soft);color:var(--ok)}
+.lampu.warn{background:var(--warn-soft);color:var(--warn)}
+.lampu.bad{background:var(--bad-soft);color:var(--bad)}
+table.batas{width:100%;border-collapse:collapse;font-size:14px}
+table.batas td,table.batas th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left}
+table.batas th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
+.riwayat-item{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.riwayat-item:last-child{border-bottom:0}
+.riwayat-item .isi{flex:1;min-width:0}
+.riwayat-item .isi b{display:block;font-size:14px}
+.riwayat-item .isi span{display:block;font-size:12.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+footer.bawah{border-top:1px solid var(--line);padding:20px 0 32px;color:var(--ink-2);font-size:13px}
+footer.bawah .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:space-between}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;box-shadow:var(--shadow);z-index:20;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.tampil{opacity:1}
+.pita-demo{background:var(--warn-soft);color:var(--warn);text-align:center;font-size:13px;font-weight:600;padding:6px 16px}
+
+@media (max-width:860px){
+  .sapa,.halaman-alat{grid-template-columns:1fr}
+  .hasil{position:static}
+  .hasil textarea{min-height:260px}
+}
+@media (max-width:520px){
+  .dua-kolom{grid-template-columns:1fr}
+  .pilih-brand{max-width:130px}
+  .sapa-teks h1{font-size:21px}
+  .logo small{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ GERBANG LISENSI ============ -->
+<section id="gerbang" class="hidden" aria-labelledby="judul-gerbang">
+  <div class="kartu-gerbang">
+    <div class="logo"><div class="logo-ikon" aria-hidden="true">💬</div><div>Mimin<small>Seri BisaPakeAI</small></div></div>
+    <h1 id="judul-gerbang">Aktifkan lisensi Mimin</h1>
+    <p>Masukkan email dan kode lisensi yang kamu dapat setelah membeli di bisapakeai.com.</p>
+    <form id="form-lisensi" novalidate>
+      <label class="f"><span>Email pembelian</span><input type="email" id="lis-email" autocomplete="email" placeholder="nama@email.com" required></label>
+      <label class="f"><span>Kode lisensi</span><input type="text" id="lis-kode" autocomplete="off" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX" required></label>
+      <div id="lis-pesan" class="pesan hidden" role="status"></div>
+      <button class="btn utama penuh" id="lis-tombol" type="submit">Aktifkan</button>
+    </form>
+    <p class="kecil" style="margin:16px 0 0">Belum punya lisensi? <a id="lis-beli" href="https://bisapakeai.com" target="_blank" rel="noopener">Beli di bisapakeai.com</a></p>
+    <p class="kecil" style="margin:6px 0 0">© <span class="tahun"></span> CV. Mewlanet Kreator Digital</p>
+  </div>
+</section>
+
+<!-- ============ APLIKASI ============ -->
+<div id="aplikasi" class="hidden">
+  <div id="pita-demo" class="pita-demo hidden">Mode demo aktif. Matikan IZINKAN_DEMO sebelum dipasang di mimin.bisapakeai.com.</div>
+  <header class="atas">
+    <div class="wrap">
+      <div class="logo" id="ke-beranda" role="link" tabindex="0"><div class="logo-ikon" aria-hidden="true">💬</div><div>Mimin<small>Seri BisaPakeAI</small></div></div>
+      <div class="spasi"></div>
+      <select id="pilih-brand" class="pilih-brand" aria-label="Brand yang sedang dikelola"></select>
+      <button class="btn tombol-ikon" id="tombol-tema" type="button" aria-label="Ganti tema terang/gelap" title="Ganti tema">🌓</button>
+    </div>
+  </header>
+  <main class="wrap" id="isi"></main>
+  <footer class="bawah">
+    <div class="wrap">
+      <span>© <span class="tahun"></span> CV. Mewlanet Kreator Digital · Seri BisaPakeAI</span>
+      <span id="info-lisensi"></span>
+    </div>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =====================================================================
+   PENGATURAN LISENSI
+   Samakan dengan seri Guru. Lihat README.md untuk format request/respons.
+   ===================================================================== */
+const LISENSI = {
+  // 'custom' = endpoint REST WordPress milik BisaPakeAI (POST JSON)
+  // 'edd'    = Easy Digital Downloads Software Licensing (GET ?edd_action=...)
+  mode: 'custom',
+  endpoint: 'https://bisapakeai.com/wp-json/bisapakeai/v1/lisensi/cek',
+  produk: 'mimin',
+  // Hanya untuk mode 'edd'
+  eddSitus: 'https://bisapakeai.com',
+  eddItemId: '',
+  eddAksi: 'check_license',   // 'activate_license' kalau tiap perangkat harus diaktifkan
+  // Cek ulang ke server tiap X jam. Kalau server tak terjangkau, tetap boleh pakai selama masa tenggang.
+  cekUlangJam: 24,
+  masaTenggangHari: 7,
+  linkBeli: 'https://bisapakeai.com',
+  // HANYA untuk uji lokal. Wajib false di produksi.
+  IZINKAN_DEMO: false
+};
+
+/* ============ util ============ */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const simpan = {
+  baca(k, bawaan){ try{ const v = localStorage.getItem(k); return v == null ? bawaan : JSON.parse(v); }catch(e){ return bawaan; } },
+  tulis(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
+  hapus(k){ try{ localStorage.removeItem(k); }catch(e){} }
+};
+const K = { lisensi:'bpai.mimin.lisensi', brand:'bpai.mimin.brand', aktif:'bpai.mimin.brandAktif', riwayat:'bpai.mimin.riwayat', tema:'bpai.mimin.tema', perangkat:'bpai.mimin.perangkat' };
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('tampil'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('tampil'), 2200); }
+function idPerangkat(){
+  let id = simpan.baca(K.perangkat, null);
+  if(!id){ id = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2)); simpan.tulis(K.perangkat, id); }
+  return id;
+}
+function angka(n, d = 0){ return Number(n).toLocaleString('id-ID', {minimumFractionDigits:d, maximumFractionDigits:d}); }
+document.querySelectorAll('.tahun').forEach(el => el.textContent = new Date().getFullYear());
+
+/* ============ tema ============ */
+function pasangTema(t){ if(t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
+pasangTema(simpan.baca(K.tema, null));
+$('#tombol-tema').addEventListener('click', () => {
+  const sekarang = document.documentElement.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const baru = sekarang === 'dark' ? 'light' : 'dark';
+  pasangTema(baru); simpan.tulis(K.tema, baru);
+});
+
+/* =====================================================================
+   LISENSI
+   ===================================================================== */
+function bacaRespons(j){
+  if(!j || typeof j !== 'object') return {valid:false, pesan:'Respons server tidak dikenali.'};
+  const d = (j.data && typeof j.data === 'object') ? j.data : {};
+  const status = String(j.license ?? j.status ?? d.status ?? d.license ?? '').toLowerCase();
+  let valid;
+  if(typeof j.valid === 'boolean') valid = j.valid;
+  else if(typeof d.valid === 'boolean') valid = d.valid;
+  else if(status) valid = ['valid','active','aktif'].includes(status);
+  else valid = j.success === true;
+  const kodeEdd = { expired:'Lisensi sudah kedaluwarsa. Perpanjang di bisapakeai.com.', disabled:'Lisensi dinonaktifkan.', revoked:'Lisensi dicabut.', invalid:'Kode lisensi tidak ditemukan.', site_inactive:'Lisensi belum diaktifkan untuk situs ini.', item_name_mismatch:'Lisensi ini bukan untuk Mimin.', invalid_item_id:'Lisensi ini bukan untuk Mimin.', no_activations_left:'Batas perangkat untuk lisensi ini sudah habis.' };
+  const pesan = j.message || d.message || kodeEdd[status] || kodeEdd[j.error] || (valid ? '' : 'Lisensi tidak valid.');
+  const kedaluwarsa = j.expires ?? j.expires_at ?? d.expires ?? d.expires_at ?? null;
+  return { valid, pesan, kedaluwarsa: (kedaluwarsa && kedaluwarsa !== 'lifetime') ? kedaluwarsa : null, nama: j.customer_name || j.name || d.name || '' };
+}
+
+async function cekKeServer(kode, email){
+  const pengendali = new AbortController();
+  const batas = setTimeout(() => pengendali.abort(), 15000);
+  try{
+    let res;
+    if(LISENSI.mode === 'edd'){
+      const p = new URLSearchParams({ edd_action: LISENSI.eddAksi, license: kode, item_id: LISENSI.eddItemId, url: location.hostname || 'lokal' });
+      res = await fetch(LISENSI.eddSitus.replace(/\/$/, '') + '/?' + p.toString(), { method:'GET', signal: pengendali.signal });
+    } else {
+      res = await fetch(LISENSI.endpoint, {
+        method:'POST', signal: pengendali.signal,
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ license_key: kode, email, product: LISENSI.produk, domain: location.hostname, device: idPerangkat() })
+      });
+    }
+    let j = null; try{ j = await res.json(); }catch(e){}
+    if(!j) return { jaringan: !res.ok, valid:false, pesan:`Server lisensi membalas ${res.status}.` };
+    return bacaRespons(j);
+  } catch(e){
+    return { jaringan:true, valid:false, pesan:'Server lisensi tidak terjangkau. Cek koneksi internetmu.' };
+  } finally { clearTimeout(batas); }
+}
+
+function masihBerlaku(l){ return !l.kedaluwarsa || isNaN(Date.parse(l.kedaluwarsa)) || Date.parse(l.kedaluwarsa) > Date.now(); }
+
+async function mulai(){
+  const demo = LISENSI.IZINKAN_DEMO && new URLSearchParams(location.search).has('demo');
+  if(demo){ $('#pita-demo').classList.remove('hidden'); masukAplikasi({ email:'demo', nama:'Demo' }); return; }
+
+  const l = simpan.baca(K.lisensi, null);
+  if(!l || !l.kode){ tampilGerbang(); return; }
+  const umurJam = (Date.now() - (l.dicek || 0)) / 36e5;
+  if(umurJam < LISENSI.cekUlangJam && masihBerlaku(l)){ masukAplikasi(l); return; }
+
+  const r = await cekKeServer(l.kode, l.email);
+  if(r.valid){ Object.assign(l, { dicek: Date.now(), kedaluwarsa: r.kedaluwarsa, nama: r.nama || l.nama }); simpan.tulis(K.lisensi, l); masukAplikasi(l); return; }
+  if(r.jaringan && umurJam < LISENSI.masaTenggangHari * 24 && masihBerlaku(l)){ masukAplikasi(l, 'Lagi offline. Lisensi dicek ulang saat online.'); return; }
+  simpan.hapus(K.lisensi);
+  tampilGerbang(r.pesan);
+}
+
+function tampilGerbang(pesan){
+  $('#aplikasi').classList.add('hidden');
+  $('#gerbang').classList.remove('hidden');
+  $('#lis-beli').href = LISENSI.linkBeli;
+  const l = simpan.baca(K.lisensi, null);
+  if(l && l.email) $('#lis-email').value = l.email;
+  if(pesan) tampilPesan(pesan, 'bad');
+}
+function tampilPesan(t, jenis){ const el = $('#lis-pesan'); el.textContent = t; el.className = 'pesan ' + jenis; }
+
+$('#form-lisensi').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = $('#lis-email').value.trim(), kode = $('#lis-kode').value.trim();
+  if(!/^\S+@\S+\.\S+$/.test(email)){ tampilPesan('Email belum benar.', 'bad'); return; }
+  if(kode.length < 6){ tampilPesan('Kode lisensi belum lengkap.', 'bad'); return; }
+  const t = $('#lis-tombol'); t.disabled = true; t.textContent = 'Mengecek…';
+  const r = await cekKeServer(kode, email);
+  t.disabled = false; t.textContent = 'Aktifkan';
+  if(!r.valid){ tampilPesan(r.pesan, 'bad'); return; }
+  const l = { kode, email, nama: r.nama, kedaluwarsa: r.kedaluwarsa, dicek: Date.now() };
+  simpan.tulis(K.lisensi, l);
+  $('#lis-kode').value = '';
+  masukAplikasi(l);
+});
+
+function keluarLisensi(){
+  if(!confirm('Lepas lisensi dari perangkat ini? Data brand dan riwayat tetap tersimpan.')) return;
+  simpan.hapus(K.lisensi);
+  tampilGerbang();
+}
+
+function masukAplikasi(l, peringatan){
+  $('#gerbang').classList.add('hidden');
+  $('#aplikasi').classList.remove('hidden');
+  const exp = l.kedaluwarsa && !isNaN(Date.parse(l.kedaluwarsa)) ? ' · berlaku s.d. ' + new Date(l.kedaluwarsa).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : '';
+  $('#info-lisensi').innerHTML = `Lisensi: ${esc(l.email)}${esc(exp)} · <a href="#" id="lepas-lisensi">Lepas lisensi</a>`;
+  $('#lepas-lisensi').addEventListener('click', ev => { ev.preventDefault(); keluarLisensi(); });
+  isiPilihBrand();
+  navigasi();
+  if(peringatan) toast(peringatan);
+}
+
+/* =====================================================================
+   PROFIL BRAND (bisa banyak brand / klien)
+   ===================================================================== */
+const PLATFORM = ['Instagram','TikTok','Facebook','LinkedIn','X (Twitter)','Threads','YouTube Shorts','WhatsApp Channel'];
+const GAYA = ['Santai dan akrab','Ramah profesional','Formal korporat','Lucu dan receh','Hangat dan inspiratif','Tegas dan to the point'];
+const FIELD_BRAND = [
+  { id:'nama', label:'Nama brand / perusahaan', wajib:true, ph:'Kopi Senja Nusantara' },
+  { id:'bidang', label:'Bidang usaha & produk utama', wajib:true, ph:'Kedai kopi susu gula aren, 6 cabang di Bandung' },
+  { id:'deskripsi', label:'Keunggulan / pembeda', tipe:'textarea', ph:'Biji kopi dari petani Garut, harga mulai 15 ribu, bisa pesan lewat WA' },
+  { id:'audiens', label:'Target audiens', wajib:true, tipe:'textarea', ph:'Mahasiswa & pekerja muda 18–30 tahun di Bandung, suka nongkrong dan WFC' },
+  { id:'gaya', label:'Gaya bahasa', tipe:'select', opsi:GAYA },
+  { id:'sapaan', label:'Sapaan ke audiens', ph:'Kak / kamu / Sobat Senja' },
+  { id:'panggilanAdmin', label:'Admin menyebut diri', ph:'Mimin / Min / kami' },
+  { id:'platform', label:'Platform aktif', tipe:'chips', opsi:PLATFORM },
+  { id:'pilar', label:'Pilar konten', tipe:'textarea', ph:'Edukasi kopi, promo mingguan, behind the scene, cerita pelanggan, hiburan' },
+  { id:'wajib', label:'Kata/hal yang wajib ada', ph:'Tagline "Ngopi dulu, baru mikir", logo di pojok kanan' },
+  { id:'hindari', label:'Kata/hal yang dihindari', ph:'Kata "termurah", bahasa kasar, isu SARA, menyindir kompetitor' },
+  { id:'cta', label:'CTA utama', ph:'Pesan via WA 0812-xxxx atau GoFood "Kopi Senja"' },
+  { id:'hashtag', label:'Hashtag brand', ph:'#KopiSenja #NgopiDuluBaruMikir' },
+];
+
+function semuaBrand(){ return simpan.baca(K.brand, []); }
+function brandAktif(){ const id = simpan.baca(K.aktif, null); const b = semuaBrand(); return b.find(x => x.id === id) || b[0] || null; }
+function isiPilihBrand(){
+  const sel = $('#pilih-brand'); const b = semuaBrand(); const a = brandAktif();
+  sel.innerHTML = b.map(x => `<option value="${esc(x.id)}" ${a && a.id === x.id ? 'selected' : ''}>${esc(x.nama)}</option>`).join('') + `<option value="__baru">+ Brand baru</option>`;
+  if(!b.length) sel.value = '__baru';
+}
+$('#pilih-brand').addEventListener('change', e => {
+  if(e.target.value === '__baru'){ location.hash = '#/brand/baru'; return; }
+  simpan.tulis(K.aktif, e.target.value); toast('Sekarang pegang: ' + (brandAktif()?.nama || '')); navigasi();
+});
+
+function konteksBrand(b){
+  if(!b) return '';
+  const baris = [
+    ['Nama brand', b.nama], ['Bidang & produk', b.bidang], ['Keunggulan', b.deskripsi], ['Target audiens', b.audiens],
+    ['Gaya bahasa', b.gaya], ['Sapaan ke audiens', b.sapaan], ['Admin menyebut diri', b.panggilanAdmin],
+    ['Platform aktif', (b.platform || []).join(', ')], ['Pilar konten', b.pilar], ['Wajib ada', b.wajib],
+    ['Hindari', b.hindari], ['CTA utama', b.cta], ['Hashtag brand', b.hashtag]
+  ].filter(([, v]) => v && String(v).trim());
+  return '## PROFIL BRAND\n' + baris.map(([k, v]) => `- ${k}: ${String(v).trim()}`).join('\n');
+}
+
+const ATURAN_UMUM = `## ATURAN
+- Tulis dalam Bahasa Indonesia yang natural, sesuai gaya bahasa brand. Jangan terdengar seperti tulisan AI: hindari pembuka klise ("Di era digital ini…"), tanda pisah panjang berlebihan, dan pujian lebay.
+- Jangan mengarang data, angka penjualan, testimoni, penghargaan, atau klaim yang tidak ada di profil brand. Kalau butuh data, tulis [ISI: ...] supaya admin melengkapi.
+- Hindari klaim "paling", "nomor 1", "100% ampuh", atau janji hasil yang tidak bisa dibuktikan. Patuhi aturan iklan dan etika (tanpa SARA, tanpa menjatuhkan kompetitor).
+- Hormati batas karakter tiap platform dan kebiasaan audiensnya.`;
+
+/* =====================================================================
+   DAFTAR ALAT
+   Setiap alat: no, id, ikon, judul, ringkas, field[], buat(v, brand) -> prompt
+   ===================================================================== */
+const PILIH_PLATFORM = { id:'platform', label:'Platform', tipe:'chips', opsi:PLATFORM, bawaanBrand:'platform' };
+const TUJUAN = ['Awareness (kenalan)','Engagement (interaksi)','Konversi (jualan)','Edukasi','Membangun kepercayaan','Rekrutmen / employer branding'];
+
+const MOMEN = {
+  1:['1 Jan Tahun Baru','24 Jan Hari Pendidikan Internasional','25 Jan Hari Gizi Nasional'],
+  2:['9 Feb Hari Pers Nasional','14 Feb Valentine','2.2 Promo kembar'],
+  3:['8 Mar Hari Perempuan Internasional','9 Mar Hari Musik Nasional','20 Mar Hari Kebahagiaan Internasional','30 Mar Hari Film Nasional','3.3 Promo kembar'],
+  4:['21 Apr Hari Kartini','22 Apr Hari Bumi','23 Apr Hari Buku Sedunia','4.4 Promo kembar'],
+  5:['1 Mei Hari Buruh','2 Mei Hari Pendidikan Nasional','20 Mei Hari Kebangkitan Nasional','5.5 Promo kembar'],
+  6:['1 Jun Hari Lahir Pancasila','5 Jun Hari Lingkungan Hidup','6.6 Promo kembar'],
+  7:['23 Jul Hari Anak Nasional','29 Jul Hari Lingkungan Mangrove','7.7 Promo kembar'],
+  8:['12 Agu Hari Remaja Internasional','17 Agu HUT RI','8.8 Promo kembar'],
+  9:['9 Sep Hari Olahraga Nasional','24 Sep Hari Tani','27 Sep Hari Pariwisata Dunia','9.9 Promo kembar'],
+  10:['1 Okt Hari Kopi Internasional','2 Okt Hari Batik Nasional','10 Okt Hari Kesehatan Jiwa','28 Okt Sumpah Pemuda','31 Okt Halloween','10.10 Promo kembar'],
+  11:['10 Nov Hari Pahlawan','12 Nov Hari Ayah & Hari Kesehatan','25 Nov Hari Guru','11.11 Promo kembar'],
+  12:['3 Des Hari Disabilitas Internasional','12.12 Harbolnas','22 Des Hari Ibu','25 Des Natal','31 Des Malam Tahun Baru']
+};
+const NAMA_BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+function pakai(v, k, cadangan){ const x = v[k]; if(Array.isArray(x)) return x.length ? x.join(', ') : (cadangan || '-'); return (x && String(x).trim()) || cadangan || '-'; }
+
+const ALAT = [
+  {
+    no:1, id:'kalender', ikon:'📅', judul:'Kalender Konten',
+    ringkas:'Rencana posting sebulan lengkap dengan pilar, format, dan momen.',
+    field:[
+      { id:'bulan', label:'Bulan', tipe:'select', opsi:NAMA_BULAN, bawaan:() => NAMA_BULAN[(new Date().getMonth() + 1) % 12] },
+      { id:'tahun', label:'Tahun', tipe:'number', bawaan:() => new Date().getMonth() === 11 ? new Date().getFullYear() + 1 : new Date().getFullYear() },
+      PILIH_PLATFORM,
+      { id:'frekuensi', label:'Frekuensi posting', tipe:'select', opsi:['3x seminggu','5x seminggu','Setiap hari','2x sehari'] },
+      { id:'tujuan', label:'Tujuan bulan ini', tipe:'chips', opsi:TUJUAN },
+      { id:'momen', label:'Momen yang mau dipakai', tipe:'chips-momen' },
+      { id:'agenda', label:'Agenda brand bulan ini', tipe:'textarea', ph:'Launching menu baru tgl 10, promo gajian tgl 25–30, buka cabang baru' },
+    ],
+    buat:(v, b) => `Kamu adalah Social Media Strategist senior untuk brand di Indonesia.
+
+${konteksBrand(b)}
+
+## TUGAS
+Buat kalender konten untuk ${pakai(v,'bulan')} ${pakai(v,'tahun')}.
+- Platform: ${pakai(v,'platform')}
+- Frekuensi: ${pakai(v,'frekuensi')}
+- Tujuan utama: ${pakai(v,'tujuan','seimbang antara awareness, engagement, dan konversi')}
+- Momen yang dipakai: ${pakai(v,'momen','pilihkan yang relevan')}
+- Agenda brand: ${pakai(v,'agenda','tidak ada agenda khusus')}
+
+Perhatikan juga hari besar keagamaan dan libur nasional yang tanggalnya berubah tiap tahun (Ramadan, Idulfitri, Iduladha, Imlek, Nyepi, Waisak, Maulid, dll.). Kalau jatuh di bulan ini, masukkan dan beri tanda [CEK TANGGAL RESMI].
+
+## FORMAT JAWABAN
+1. Ringkasan strategi bulan ini (3–4 kalimat) dan pembagian pilar dalam persen.
+2. Tabel: Tanggal | Hari | Platform | Pilar | Format (Reels/Carousel/Single/Story/Live/Thread) | Judul/Hook | Inti pesan | CTA | Jam tayang yang disarankan.
+3. Daftar 5 konten "cadangan" yang bisa dipakai kalau ada jadwal kosong.
+4. 3 metrik yang perlu dipantau di akhir bulan.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:2, id:'caption', ikon:'✍️', judul:'Caption Siap Posting',
+    ringkas:'Caption dengan hook kuat, isi rapi, CTA, dan hashtag.',
+    field:[
+      { id:'topik', label:'Topik / isi postingan', wajib:true, tipe:'textarea', ph:'Promo buy 1 get 1 kopi susu tiap Jumat jam 14–17, khusus pesan di kedai' },
+      PILIH_PLATFORM,
+      { id:'tujuan', label:'Tujuan', tipe:'select', opsi:TUJUAN },
+      { id:'formula', label:'Formula copywriting', tipe:'select', opsi:['Pilihkan yang paling cocok','AIDA (Attention, Interest, Desire, Action)','PAS (Problem, Agitate, Solution)','Before–After–Bridge','Storytelling singkat','Listicle / poin-poin','FAB (Fitur, Keunggulan, Manfaat)'] },
+      { id:'panjang', label:'Panjang', tipe:'select', opsi:['Pendek (1–3 kalimat)','Sedang (± 80–120 kata)','Panjang (storytelling)'] },
+      { id:'versi', label:'Jumlah versi', tipe:'select', opsi:['3','2','5'] },
+      { id:'emoji', label:'Emoji', tipe:'select', opsi:['Secukupnya','Tanpa emoji','Banyak dan ceria'] },
+    ],
+    buat:(v, b) => `Kamu adalah copywriter media sosial yang paham karakter audiens Indonesia.
+
+${konteksBrand(b)}
+
+## TUGAS
+Tulis ${pakai(v,'versi','3')} versi caption untuk: ${pakai(v,'topik')}
+- Platform: ${pakai(v,'platform')}
+- Tujuan: ${pakai(v,'tujuan')}
+- Formula: ${pakai(v,'formula')}
+- Panjang: ${pakai(v,'panjang')}
+- Emoji: ${pakai(v,'emoji')}
+
+## FORMAT JAWABAN
+Untuk setiap versi:
+- **Hook** (kalimat pertama yang bikin berhenti scroll, maks 12 kata)
+- **Caption lengkap** siap salin
+- **CTA**
+- **Hashtag** (campuran brand, niche, dan umum; sesuaikan jumlahnya dengan platform)
+- Satu baris alasan kenapa versi ini cocok
+Kalau platformnya lebih dari satu, sesuaikan panjang dan gaya untuk tiap platform.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:3, id:'naskah', ikon:'🎬', judul:'Naskah Reels / TikTok',
+    ringkas:'Hook 3 detik, adegan per detik, teks layar, dan musik.',
+    field:[
+      { id:'topik', label:'Topik video', wajib:true, tipe:'textarea', ph:'3 kesalahan bikin kopi susu di rumah' },
+      { id:'durasi', label:'Durasi', tipe:'select', opsi:['15 detik','30 detik','45–60 detik','90 detik'] },
+      { id:'format', label:'Gaya video', tipe:'select', opsi:['Talking head (ngomong ke kamera)','Voice over + b-roll','Tanpa wajah (teks di layar)','POV / skit lucu','Tutorial / step-by-step','Behind the scene','Tren / audio viral'] },
+      { id:'talent', label:'Siapa yang tampil', ph:'Barista perempuan, owner, atau tangan saja' },
+      { id:'alat', label:'Peralatan', tipe:'select', opsi:['HP saja','HP + mic clip-on','Kamera + lighting'] },
+      { id:'tujuan', label:'Tujuan', tipe:'select', opsi:TUJUAN },
+    ],
+    buat:(v, b) => `Kamu adalah kreator short video dan sutradara konten yang paham algoritma Reels dan TikTok.
+
+${konteksBrand(b)}
+
+## TUGAS
+Buat naskah video pendek tentang: ${pakai(v,'topik')}
+- Durasi: ${pakai(v,'durasi')}
+- Gaya: ${pakai(v,'format')}
+- Talent: ${pakai(v,'talent','bebas, sarankan yang paling realistis')}
+- Peralatan: ${pakai(v,'alat')}
+- Tujuan: ${pakai(v,'tujuan')}
+
+## FORMAT JAWABAN
+1. 3 pilihan **hook 3 detik pertama** (ucapan + visual), pilih satu yang terbaik dan jelaskan alasannya.
+2. Tabel naskah: Detik | Visual / adegan | Ucapan (voice over) | Teks di layar | Catatan editing.
+3. Saran audio/musik (jenis, bukan judul lagu berhak cipta kecuali tren yang umum dipakai).
+4. Caption pendek + 5 hashtag.
+5. Shot list untuk syuting (urut supaya hemat waktu).
+6. 2 ide variasi untuk konten lanjutan (part 2).
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:4, id:'carousel', ikon:'🖼️', judul:'Carousel Edukasi',
+    ringkas:'Isi slide per slide yang bikin orang swipe sampai habis.',
+    field:[
+      { id:'topik', label:'Topik carousel', wajib:true, tipe:'textarea', ph:'Bedanya arabika dan robusta buat pemula' },
+      { id:'slide', label:'Jumlah slide', tipe:'select', opsi:['7','5','10'] },
+      { id:'platform', label:'Platform', tipe:'select', opsi:['Instagram','LinkedIn','TikTok Photo Mode','Facebook'] },
+      { id:'gaya', label:'Gaya isi', tipe:'select', opsi:['Edukasi poin-poin','Mitos vs fakta','Langkah-langkah (how to)','Studi kasus','Perbandingan','Checklist'] },
+    ],
+    buat:(v, b) => `Kamu adalah content designer yang ahli membuat carousel edukasi dengan retensi tinggi.
+
+${konteksBrand(b)}
+
+## TUGAS
+Buat carousel ${pakai(v,'slide','7')} slide untuk ${pakai(v,'platform')} tentang: ${pakai(v,'topik')}
+Gaya isi: ${pakai(v,'gaya')}
+
+## FORMAT JAWABAN
+Untuk tiap slide tulis:
+- Slide ke-n
+- Judul (maks 8 kata)
+- Isi teks (maks 30 kata, gampang dibaca di HP)
+- Arahan visual untuk desainer (ikon, foto, layout, warna aksen)
+Aturan: slide 1 adalah hook yang membuat orang penasaran, slide 2 menjanjikan manfaat, slide terakhir berisi ringkasan + CTA (simpan, bagikan, atau sesuai CTA brand).
+Lalu tulis caption pendek pendamping + hashtag.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:5, id:'ide', ikon:'💡', judul:'Bank Ide Konten',
+    ringkas:'Puluhan ide konten per pilar supaya gak pernah kehabisan.',
+    field:[
+      { id:'jumlah', label:'Jumlah ide', tipe:'select', opsi:['30','20','50'] },
+      { id:'pilar', label:'Fokus pilar', ph:'Kosongkan untuk pakai pilar di profil brand', bawaanBrand:'pilar' },
+      PILIH_PLATFORM,
+      { id:'jenis', label:'Jenis ide yang diinginkan', tipe:'chips', opsi:['Edukasi','Hiburan','Promo halus','Behind the scene','User generated content','Interaktif (polling, kuis)','Tren','Cerita pelanggan','Employer branding'] },
+      { id:'masalah', label:'Pertanyaan / keluhan yang sering muncul dari audiens', tipe:'textarea', ph:'Ada yang less sugar gak? Kenapa harganya beda dengan di aplikasi?' },
+    ],
+    buat:(v, b) => `Kamu adalah Content Strategist yang kreatif tapi tetap realistis untuk dieksekusi tim kecil.
+
+${konteksBrand(b)}
+
+## TUGAS
+Buat ${pakai(v,'jumlah','30')} ide konten.
+- Pilar: ${pakai(v,'pilar')}
+- Platform: ${pakai(v,'platform')}
+- Jenis: ${pakai(v,'jenis','campur')}
+- Pertanyaan/keluhan audiens yang bisa dijadikan konten: ${pakai(v,'masalah','tidak ada data')}
+
+## FORMAT JAWABAN
+Tabel: No | Pilar | Judul/hook | Format | Inti isi (1 kalimat) | Tingkat usaha produksi (Rendah/Sedang/Tinggi).
+Kelompokkan per pilar. Setelah tabel, tandai 5 ide dengan potensi viral paling tinggi dan jelaskan singkat kenapa.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:6, id:'balas', ikon:'💬', judul:'Balas Netizen',
+    ringkas:'Balasan komentar dan DM yang sopan, cepat, dan menenangkan.',
+    field:[
+      { id:'pesan', label:'Komentar / DM yang masuk', wajib:true, tipe:'textarea', ph:'Min, kemarin pesan via GoFood kopinya tumpah dan esnya cair. Kecewa banget!' },
+      { id:'jenis', label:'Jenis pesan', tipe:'select', opsi:['Komplain','Pertanyaan produk','Pujian','Komentar negatif / nyinyir','Minta kerja sama / endorse','Spam / penipuan atas nama brand','Pertanyaan harga'] },
+      { id:'saluran', label:'Dibalas di mana', tipe:'select', opsi:['Kolom komentar publik','DM / chat pribadi','Keduanya (publik singkat, lanjut DM)'] },
+      { id:'solusi', label:'Solusi yang boleh ditawarkan', tipe:'textarea', ph:'Ganti 1 minuman gratis, minta foto struk via DM' },
+    ],
+    buat:(v, b) => `Kamu adalah Community Manager yang berpengalaman menangani pelanggan di media sosial dengan empati.
+
+${konteksBrand(b)}
+
+## PESAN MASUK
+"${pakai(v,'pesan')}"
+- Jenis: ${pakai(v,'jenis')}
+- Dibalas di: ${pakai(v,'saluran')}
+- Solusi yang boleh ditawarkan: ${pakai(v,'solusi','belum ada; jangan janjikan kompensasi apa pun, arahkan ke DM untuk dicek')}
+
+## TUGAS
+1. Baca suasana hati pengirim dalam 1 kalimat.
+2. Tulis 3 pilihan balasan: (a) singkat, (b) hangat dan lengkap, (c) versi yang lebih formal.
+3. Kalau perlu lanjut ke DM, tulis juga pesan pembuka DM-nya.
+4. Sebutkan 1 hal yang JANGAN dilakukan admin dalam kasus ini.
+Balasan wajib: memakai sapaan brand, mengakui masalah tanpa menyalahkan pelanggan, tidak defensif, tidak membocorkan data pribadi, dan tidak menjanjikan hal di luar solusi yang tersedia.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:7, id:'krisis', ikon:'🚨', judul:'Mode Krisis',
+    ringkas:'Klarifikasi resmi saat brand diserang atau viral negatif.',
+    field:[
+      { id:'kasus', label:'Apa yang terjadi', wajib:true, tipe:'textarea', ph:'Video pelanggan menemukan rambut di minuman viral di TikTok, 200 ribu views, banyak komentar negatif' },
+      { id:'fakta', label:'Fakta yang sudah dipastikan', tipe:'textarea', ph:'Kejadian di cabang Dago tgl 12, pelanggan sudah dihubungi, SOP hairnet sedang dicek' },
+      { id:'level', label:'Tingkat krisis', tipe:'select', opsi:['Ringan (beberapa komentar)','Sedang (mulai menyebar)','Berat (viral / diliput media)'] },
+      { id:'pihak', label:'Yang menandatangani pernyataan', ph:'Manajemen Kopi Senja Nusantara' },
+    ],
+    buat:(v, b) => `Kamu adalah konsultan Public Relations dan manajemen krisis digital.
+
+${konteksBrand(b)}
+
+## SITUASI
+${pakai(v,'kasus')}
+- Fakta yang sudah pasti: ${pakai(v,'fakta','belum ada, tandai bagian yang perlu dipastikan')}
+- Tingkat krisis: ${pakai(v,'level')}
+- Penanda tangan: ${pakai(v,'pihak', b ? 'Manajemen ' + b.nama : 'Manajemen')}
+
+## TUGAS
+1. Analisis singkat: apa yang membuat publik marah dan apa yang mereka harapkan.
+2. Langkah 24 jam pertama untuk tim (urut, ada penanggung jawab).
+3. Draf pernyataan resmi untuk feed (permintaan maaf yang tulus, fakta, tindakan nyata, kontak). Hindari kalimat "mohon maaf jika ada yang tersinggung" dan jangan menyalahkan pihak lain.
+4. Versi singkat untuk Story / balasan komentar.
+5. Template balasan untuk 5 jenis komentar yang kemungkinan muncul.
+6. Hal yang tidak boleh dilakukan (hapus komentar massal, debat, dll.).
+7. Kapan krisis dianggap reda dan konten apa yang dipakai untuk pemulihan.
+Jangan mengarang fakta. Bagian yang belum pasti tulis [PASTIKAN: ...].
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:8, id:'daurulang', ikon:'♻️', judul:'Daur Ulang Konten',
+    ringkas:'Satu materi jadi banyak konten untuk semua platform.',
+    field:[
+      { id:'sumber', label:'Materi sumber', wajib:true, tipe:'textarea', ph:'Tempel artikel blog, transkrip webinar, siaran pers, atau caption lama di sini' },
+      PILIH_PLATFORM,
+      { id:'jumlah', label:'Jumlah turunan konten', tipe:'select', opsi:['10','5','15'] },
+    ],
+    buat:(v, b) => `Kamu adalah Content Repurposing Specialist.
+
+${konteksBrand(b)}
+
+## MATERI SUMBER
+"""
+${pakai(v,'sumber')}
+"""
+
+## TUGAS
+Ubah materi di atas menjadi ${pakai(v,'jumlah','10')} konten turunan untuk platform: ${pakai(v,'platform')}.
+Variasikan format: carousel, Reels/TikTok, thread, quote card, polling Story, postingan LinkedIn, dll.
+
+## FORMAT JAWABAN
+Untuk tiap konten: Platform | Format | Hook | Isi lengkap siap pakai (atau naskah singkat untuk video) | CTA.
+Hanya gunakan fakta yang ada di materi sumber.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:9, id:'hashtag', ikon:'#️⃣', judul:'Hashtag & Kata Kunci',
+    ringkas:'Set hashtag dan kata kunci pencarian per topik.',
+    field:[
+      { id:'topik', label:'Topik / produk', wajib:true, ph:'Kopi susu gula aren Bandung' },
+      PILIH_PLATFORM,
+      { id:'lokasi', label:'Kota / area', ph:'Bandung' },
+    ],
+    buat:(v, b) => `Kamu adalah spesialis social media SEO untuk pasar Indonesia.
+
+${konteksBrand(b)}
+
+## TUGAS
+Topik: ${pakai(v,'topik')}
+Platform: ${pakai(v,'platform')}
+Lokasi: ${pakai(v,'lokasi','Indonesia')}
+
+1. 3 set hashtag siap pakai per platform: (a) besar/umum, (b) niche, (c) lokal + brand. Sesuaikan jumlah dengan kebiasaan platform.
+2. 15 kata kunci yang kemungkinan diketik orang di kolom pencarian TikTok/Instagram/Google terkait topik ini.
+3. Cara menyelipkan kata kunci itu secara natural di caption, teks layar, dan alt text, plus 1 contoh caption.
+4. Hashtag yang sebaiknya dihindari (terlalu umum, spam, atau bermasalah).
+Catatan: kamu tidak punya data volume real-time, jadi jangan menulis angka jumlah postingan. Sarankan admin mengecek langsung di kolom pencarian platform.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:10, id:'iklan', ikon:'📣', judul:'Iklan Berbayar',
+    ringkas:'Copy iklan Meta, TikTok, dan Google lengkap dengan variasi A/B.',
+    field:[
+      { id:'produk', label:'Yang diiklankan', wajib:true, tipe:'textarea', ph:'Paket kopi literan 1 liter Rp85.000, free ongkir area Bandung' },
+      { id:'kanal', label:'Kanal iklan', tipe:'chips', opsi:['Meta Ads (IG/FB)','TikTok Ads','Google Ads','YouTube Ads','Iklan WhatsApp (Click to WA)'] },
+      { id:'tujuan', label:'Tujuan kampanye', tipe:'select', opsi:['Penjualan / konversi','Leads / chat WA','Traffic ke website','Awareness','Install aplikasi'] },
+      { id:'promo', label:'Penawaran / promo', ph:'Diskon 20% s.d. 31 Okt, kode KOPISENJA' },
+      { id:'audiens', label:'Target iklan (kalau beda dari profil)', tipe:'textarea' },
+    ],
+    buat:(v, b) => `Kamu adalah performance marketer dan direct-response copywriter.
+
+${konteksBrand(b)}
+
+## TUGAS
+Produk/penawaran: ${pakai(v,'produk')}
+Kanal: ${pakai(v,'kanal','Meta Ads (IG/FB)')}
+Tujuan: ${pakai(v,'tujuan')}
+Promo: ${pakai(v,'promo','tidak ada promo khusus')}
+Target: ${pakai(v,'audiens', 'sesuai profil brand')}
+
+## FORMAT JAWABAN
+Per kanal:
+1. 3 angle iklan berbeda (mis. masalah, manfaat, bukti sosial, urgensi), beri nama tiap angle.
+2. Untuk tiap angle: Primary text, Headline (sesuai batas karakter kanal), Deskripsi, CTA button yang disarankan.
+3. Ide visual / 3 detik pertama video untuk tiap angle.
+4. Rencana uji A/B sederhana: apa yang diuji duluan dan metrik penentunya.
+5. Saran targeting minat dan audiens (sebagai bahan uji, bukan jaminan).
+Patuhi kebijakan iklan platform: tanpa klaim kesehatan berlebihan, tanpa menyebut ciri pribadi audiens ("Kamu yang gendut…"), tanpa janji hasil pasti.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:11, id:'brief', ikon:'🎨', judul:'Brief Desain & Prompt Gambar',
+    ringkas:'Brief rapi untuk desainer, plus prompt untuk AI gambar.',
+    field:[
+      { id:'konten', label:'Konten yang mau dibuat visualnya', wajib:true, tipe:'textarea', ph:'Poster promo buy 1 get 1 Jumat sore' },
+      { id:'ukuran', label:'Ukuran', tipe:'select', opsi:['Feed 4:5 (1080×1350)','Feed 1:1 (1080×1080)','Story/Reels 9:16 (1080×1920)','LinkedIn 1.91:1 (1200×627)','Thumbnail YouTube 16:9 (1280×720)'] },
+      { id:'warna', label:'Warna & font brand', ph:'Cokelat kopi #5B3A29, krem #F4E9DC, font Poppins' },
+      { id:'gaya', label:'Gaya visual', tipe:'select', opsi:['Minimalis bersih','Foto produk close-up','Ilustrasi flat','Bold dan ramai (promo)','Elegan premium','Retro / vintage','3D modern'] },
+      { id:'alatai', label:'AI gambar yang dipakai', tipe:'select', opsi:['Umum (bisa untuk semua)','Midjourney','DALL·E / ChatGPT','Canva Magic Media','Ideogram','Gemini / Imagen'] },
+    ],
+    buat:(v, b) => `Kamu adalah Art Director untuk konten media sosial.
+
+${konteksBrand(b)}
+
+## TUGAS
+Konten: ${pakai(v,'konten')}
+Ukuran: ${pakai(v,'ukuran')}
+Warna & font: ${pakai(v,'warna','sarankan yang cocok dengan karakter brand')}
+Gaya: ${pakai(v,'gaya')}
+
+## FORMAT JAWABAN
+1. **Brief desainer**: tujuan, pesan utama, hierarki teks (headline, subheadline, info, CTA) dengan kalimat final, layout yang disarankan, elemen wajib, dan hal yang dihindari.
+2. **Teks final** yang akan ditaruh di desain (singkat dan mudah dibaca di HP).
+3. **3 prompt AI gambar** dalam bahasa Inggris, dioptimalkan untuk ${pakai(v,'alatai')}, termasuk rasio, pencahayaan, sudut kamera, dan gaya. Sertakan negative prompt bila alatnya mendukung. Catatan: teks di gambar sebaiknya ditambahkan manual di Canva/Figma.
+4. Checklist sebelum posting (kontras, keterbacaan, logo, typo).
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:12, id:'kompetitor', ikon:'🔍', judul:'Bedah Kompetitor',
+    ringkas:'Analisis akun pesaing dan peluang konten yang belum diambil.',
+    field:[
+      { id:'data', label:'Data akun kompetitor', wajib:true, tipe:'textarea', ph:'Tempel nama akun, jumlah followers, 5–10 caption terbaru, jumlah like/komentar, dan catatanmu' },
+      { id:'fokus', label:'Fokus analisis', tipe:'chips', opsi:['Pilar & format konten','Gaya bahasa','Frekuensi & jam posting','Konten paling ramai','Promo & harga','Celah yang bisa diambil'] },
+    ],
+    buat:(v, b) => `Kamu adalah analis media sosial yang objektif.
+
+${konteksBrand(b)}
+
+## DATA KOMPETITOR (dari admin)
+"""
+${pakai(v,'data')}
+"""
+
+## TUGAS
+Fokus: ${pakai(v,'fokus','semua aspek')}
+1. Ringkas strategi konten kompetitor berdasarkan data di atas saja.
+2. Hitung engagement rate per postingan bila data like, komentar, dan followers tersedia (rumus: (like + komentar) ÷ followers × 100%). Tunjukkan perhitungannya.
+3. Apa yang mereka lakukan dengan baik dan bisa kita adaptasi (bukan ditiru mentah).
+4. 5 celah/peluang konten yang belum mereka ambil dan cocok untuk brand kita.
+5. 3 eksperimen konten untuk 2 minggu ke depan.
+Jangan berasumsi soal data yang tidak diberikan dan jangan menjelekkan kompetitor.
+
+${ATURAN_UMUM}`
+  },
+  {
+    no:13, id:'laporan', ikon:'📊', judul:'Laporan Bulanan',
+    ringkas:'Ubah angka insight jadi laporan yang enak dibaca atasan atau klien.',
+    field:[
+      { id:'periode', label:'Periode', ph:'September 2026', wajib:true },
+      { id:'data', label:'Data insight', wajib:true, tipe:'textarea', ph:'Followers awal 12.400, akhir 13.150. Reach 210.000. Impresi 380.000. Total like 9.800, komentar 640, share 410, save 1.200. Postingan: 22. Klik link: 530. Chat WA: 96.' },
+      { id:'top', label:'Konten terbaik & terburuk', tipe:'textarea', ph:'Terbaik: Reels "3 kesalahan bikin kopi" reach 48.000. Terburuk: poster promo reach 1.200.' },
+      { id:'target', label:'Target bulan ini (kalau ada)', ph:'Followers +1.000, chat WA 100' },
+      { id:'pembaca', label:'Laporan untuk', tipe:'select', opsi:['Atasan / manajemen','Klien agensi','Tim internal'] },
+    ],
+    buat:(v, b) => `Kamu adalah Social Media Analyst yang pandai menjelaskan angka dengan bahasa bisnis yang sederhana.
+
+${konteksBrand(b)}
+
+## DATA ${pakai(v,'periode').toUpperCase()}
+${pakai(v,'data')}
+Konten terbaik/terburuk: ${pakai(v,'top','tidak ada data')}
+Target: ${pakai(v,'target','tidak ada target tertulis')}
+Pembaca laporan: ${pakai(v,'pembaca')}
+
+## TUGAS
+1. Ringkasan eksekutif 3 kalimat (hasil, penyebab, langkah berikutnya).
+2. Tabel metrik utama. Hitung pertumbuhan followers (%), engagement rate by reach ((like + komentar + share + save) ÷ reach × 100%), dan rasio konversi (klik/chat ÷ reach) bila datanya ada. Tunjukkan rumus dan hasilnya, jangan menebak angka yang tidak tersedia.
+3. Pencapaian vs target.
+4. Insight: kenapa konten terbaik berhasil dan konten terburuk kurang.
+5. 3–5 rekomendasi konkret untuk bulan depan.
+Gunakan nada yang sesuai pembaca laporan. Format rapi siap ditempel ke dokumen atau slide.
+
+${ATURAN_UMUM}`
+  },
+  { no:14, id:'engagement', ikon:'🧮', judul:'Kalkulator Engagement', ringkas:'Hitung engagement rate langsung di sini, tanpa AI.', lokal:true },
+  { no:15, id:'panjang', ikon:'🔤', judul:'Cek Panjang Caption', ringkas:'Pastikan caption tidak terpotong di tiap platform.', lokal:true },
+];
+
+/* =====================================================================
+   NAVIGASI
+   ===================================================================== */
+window.addEventListener('hashchange', navigasi);
+$('#ke-beranda').addEventListener('click', () => location.hash = '#/');
+$('#ke-beranda').addEventListener('keydown', e => { if(e.key === 'Enter') location.hash = '#/'; });
+
+function navigasi(){
+  if($('#aplikasi').classList.contains('hidden')) return;
+  const h = location.hash.replace(/^#\/?/, '');
+  const [hal, sub] = h.split('/');
+  window.scrollTo(0, 0);
+  if(hal === 'brand') return halamanBrand(sub);
+  if(hal === 'riwayat') return halamanRiwayat();
+  const alat = ALAT.find(a => a.id === hal);
+  if(alat) return alat.lokal ? halamanLokal(alat) : halamanAlat(alat);
+  halamanBeranda();
+}
+
+/* ============ beranda ============ */
+function halamanBeranda(){
+  const b = brandAktif();
+  const jam = new Date().getHours();
+  const waktu = jam < 11 ? 'pagi' : jam < 15 ? 'siang' : jam < 18 ? 'sore' : 'malam';
+  const status = b
+    ? `<b>${esc(b.nama)}</b><span class="kecil">${esc(b.bidang || '')}</span><span class="kecil">Semua alat otomatis memakai profil ini.</span><div class="baris-tombol"><a class="btn kecil" href="#/brand/${esc(b.id)}">Ubah profil</a><a class="btn kecil" href="#/brand/baru">+ Brand lain</a></div>`
+    : `<b>Isi profil brand dulu, yuk</b><span class="kecil">Cukup sekali. Setelah itu semua caption, naskah, dan balasan otomatis sesuai gaya brand kamu.</span><div class="baris-tombol"><a class="btn utama kecil" href="#/brand/baru">Isi profil brand</a></div>`;
+  $('#isi').innerHTML = `
+    <section class="sapa">
+      <div class="sapa-teks">
+        <h1>Selamat ${waktu}, aku Mimin 👋</h1>
+        <p>Admin medsos andalan kamu. Pilih alat di bawah, isi seperlunya, lalu Mimin racikkan prompt yang tinggal ditempel ke Claude, ChatGPT, atau Gemini.</p>
+        <p>Pegang banyak akun klien? Simpan beberapa profil brand dan ganti lewat menu di pojok kanan atas.</p>
+      </div>
+      <div class="status-brand">${status}</div>
+    </section>
+    <h2 class="judul-bagian">Bikin konten</h2>
+    <div class="grid-alat">${ALAT.filter(a => a.no <= 5 || a.no === 8 || a.no === 11).map(kartuAlat).join('')}</div>
+    <h2 class="judul-bagian">Jaga komunitas & reputasi</h2>
+    <div class="grid-alat">${ALAT.filter(a => [6,7].includes(a.no)).map(kartuAlat).join('')}</div>
+    <h2 class="judul-bagian">Tumbuh & ukur hasil</h2>
+    <div class="grid-alat">${ALAT.filter(a => [9,10,12,13,14,15].includes(a.no)).map(kartuAlat).join('')}
+      <button class="alat" type="button" onclick="location.hash='#/riwayat'"><div class="no">🕘</div><div><b>Riwayat</b><span>Prompt yang pernah kamu buat di perangkat ini.</span></div></button>
+    </div>`;
+}
+function kartuAlat(a){
+  return `<button class="alat" type="button" onclick="location.hash='#/${a.id}'"><div class="no" aria-hidden="true">${a.ikon}</div><div><span class="angka">${String(a.no).padStart(2,'0')}</span><b>${esc(a.judul)}</b><span>${esc(a.ringkas)}</span></div></button>`;
+}
+
+/* ============ form generik ============ */
+function renderField(f, nilai){
+  const id = 'f-' + f.id;
+  const wajib = f.wajib ? '' : ' <em>(opsional)</em>';
+  if(f.tipe === 'chips' || f.tipe === 'chips-momen'){
+    const opsi = f.tipe === 'chips-momen' ? [] : f.opsi;
+    const terpilih = Array.isArray(nilai) ? nilai : [];
+    return `<div class="f" style="margin:0 0 14px"><span style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px">${esc(f.label)}${wajib}</span><div class="chips" id="${id}" data-chips="${esc(f.id)}">${opsi.map(o => `<button type="button" class="chip" aria-pressed="${terpilih.includes(o)}">${esc(o)}</button>`).join('')}</div></div>`;
+  }
+  if(f.tipe === 'select') return `<label class="f"><span>${esc(f.label)}</span><select id="${id}">${f.opsi.map(o => `<option ${o === nilai ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select></label>`;
+  if(f.tipe === 'textarea') return `<label class="f"><span>${esc(f.label)}${wajib}</span><textarea id="${id}" placeholder="${esc(f.ph || '')}">${esc(nilai || '')}</textarea></label>`;
+  return `<label class="f"><span>${esc(f.label)}${wajib}</span><input type="${f.tipe === 'number' ? 'number' : 'text'}" id="${id}" placeholder="${esc(f.ph || '')}" value="${esc(nilai ?? '')}"></label>`;
+}
+function pasangChips(root){
+  root.querySelectorAll('.chips .chip').forEach(c => c.addEventListener('click', () => c.setAttribute('aria-pressed', c.getAttribute('aria-pressed') !== 'true')));
+}
+function bacaField(fields){
+  const v = {};
+  for(const f of fields){
+    const el = $('#f-' + f.id);
+    if(!el) continue;
+    if(f.tipe === 'chips' || f.tipe === 'chips-momen') v[f.id] = [...el.querySelectorAll('.chip[aria-pressed="true"]')].map(c => c.textContent);
+    else v[f.id] = el.value.trim();
+  }
+  return v;
+}
+
+/* ============ halaman alat prompt ============ */
+function halamanAlat(a){
+  const b = brandAktif();
+  const nilaiAwal = f => {
+    if(f.bawaanBrand && b && b[f.bawaanBrand]) return b[f.bawaanBrand];
+    if(typeof f.bawaan === 'function') return f.bawaan();
+    return f.bawaan;
+  };
+  $('#isi').innerHTML = `
+    <button class="kembali" type="button" onclick="location.hash='#/'">← Semua alat</button>
+    <div class="halaman-alat">
+      <section class="panel">
+        <h1>${a.ikon} ${esc(a.judul)}</h1>
+        <p class="lead">${esc(a.ringkas)}</p>
+        ${b ? '' : `<div class="tips">Belum ada profil brand, jadi hasilnya masih umum. <a href="#/brand/baru">Isi profil brand</a> supaya Mimin paham gaya kamu.</div><div style="height:14px"></div>`}
+        <form id="form-alat" novalidate>
+          ${a.field.map(f => renderField(f, nilaiAwal(f))).join('')}
+          <div id="alat-pesan" class="pesan bad hidden" role="alert"></div>
+          <button class="btn utama penuh" type="submit">Racik prompt</button>
+        </form>
+      </section>
+      <section class="panel hasil" aria-live="polite">
+        <div id="hasil-isi"><div class="kosong"><span class="besar" aria-hidden="true">${a.ikon}</span>Isi formulir di samping, lalu tekan <b>Racik prompt</b>. Prompt-nya muncul di sini.</div></div>
+      </section>
+    </div>`;
+  const form = $('#form-alat');
+  pasangChips(form);
+  if(a.id === 'kalender'){
+    const isiMomen = () => {
+      const i = NAMA_BULAN.indexOf($('#f-bulan').value) + 1;
+      const wadah = $('#f-momen');
+      wadah.innerHTML = (MOMEN[i] || []).map(m => `<button type="button" class="chip" aria-pressed="false">${esc(m)}</button>`).join('');
+      pasangChips(wadah.parentElement);
+    };
+    $('#f-bulan').addEventListener('change', isiMomen); isiMomen();
+  }
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const v = bacaField(a.field);
+    const kurang = a.field.filter(f => f.wajib && !(Array.isArray(v[f.id]) ? v[f.id].length : v[f.id]));
+    const pesan = $('#alat-pesan');
+    if(kurang.length){ pesan.textContent = 'Isi dulu: ' + kurang.map(f => f.label).join(', '); pesan.classList.remove('hidden'); $('#f-' + kurang[0].id).focus(); return; }
+    pesan.classList.add('hidden');
+    const prompt = a.buat(v, brandAktif()).replace(/\n{3,}/g, '\n\n').trim();
+    tampilHasil(a, prompt);
+    simpanRiwayat(a, v, prompt);
+  });
+}
+
+function tampilHasil(a, prompt){
+  $('#hasil-isi').innerHTML = `
+    <label class="f" style="margin:0"><span>Prompt siap pakai</span><textarea id="hasil-prompt" spellcheck="false">${esc(prompt)}</textarea></label>
+    <div class="baris-tombol">
+      <button class="btn utama" type="button" id="b-salin">Salin prompt</button>
+      <button class="btn" type="button" data-buka="claude">Buka di Claude</button>
+      <button class="btn" type="button" data-buka="chatgpt">Buka di ChatGPT</button>
+      <button class="btn" type="button" data-buka="gemini">Buka di Gemini</button>
+      <button class="btn" type="button" id="b-unduh">Unduh .txt</button>
+    </div>
+    <p class="kecil" style="margin:12px 0 0">Prompt bisa kamu ubah dulu di kotak atas sebelum disalin. Selalu baca ulang hasil AI sebelum diposting, terutama harga, tanggal, dan nama.</p>`;
+  const ambil = () => $('#hasil-prompt').value;
+  $('#b-salin').addEventListener('click', () => salin(ambil()));
+  $('#b-unduh').addEventListener('click', () => {
+    const blob = new Blob([ambil()], {type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob); const link = document.createElement('a');
+    link.href = url; link.download = `mimin-${a.id}-${new Date().toISOString().slice(0,10)}.txt`; link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+  document.querySelectorAll('[data-buka]').forEach(t => t.addEventListener('click', () => bukaDi(t.dataset.buka, ambil())));
+  if(matchMedia('(max-width:860px)').matches) $('#hasil-isi').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+async function salin(teks, diam){
+  try{ await navigator.clipboard.writeText(teks); }
+  catch(e){ const t = document.createElement('textarea'); t.value = teks; document.body.appendChild(t); t.select(); try{ document.execCommand('copy'); }catch(_){} t.remove(); }
+  if(!diam) toast('Prompt disalin ✓');
+}
+function bukaDi(ai, prompt){
+  salin(prompt, true);
+  const q = encodeURIComponent(prompt);
+  const pendek = q.length < 7000;
+  const url = { claude: 'https://claude.ai/new' + (pendek ? '?q=' + q : ''), chatgpt: 'https://chatgpt.com/' + (pendek ? '?q=' + q : ''), gemini: 'https://gemini.google.com/app' }[ai];
+  window.open(url, '_blank', 'noopener');
+  toast(pendek && ai !== 'gemini' ? 'Membuka… prompt juga sudah disalin' : 'Prompt disalin. Tempel (Ctrl/⌘+V) di kolom chat');
+}
+
+/* ============ riwayat ============ */
+function simpanRiwayat(a, v, prompt){
+  const r = simpan.baca(K.riwayat, []);
+  const ringkas = Object.values(v).map(x => Array.isArray(x) ? x.join(', ') : x).find(x => x && x.length > 3) || '';
+  r.unshift({ id: Date.now(), alat: a.id, brand: brandAktif()?.nama || '', ringkas: ringkas.slice(0, 90), prompt, waktu: Date.now() });
+  simpan.tulis(K.riwayat, r.slice(0, 30));
+}
+function halamanRiwayat(){
+  const r = simpan.baca(K.riwayat, []);
+  $('#isi').innerHTML = `
+    <button class="kembali" type="button" onclick="location.hash='#/'">← Semua alat</button>
+    <section class="panel" style="max-width:760px">
+      <h1>🕘 Riwayat</h1>
+      <p class="lead">30 prompt terakhir yang kamu racik. Tersimpan di browser perangkat ini saja.</p>
+      ${r.length ? r.map(x => { const a = ALAT.find(y => y.id === x.alat) || {ikon:'•', judul:x.alat}; return `
+        <div class="riwayat-item"><div aria-hidden="true">${a.ikon}</div>
+          <div class="isi"><b>${esc(a.judul)}${x.brand ? ' · ' + esc(x.brand) : ''}</b><span>${esc(new Date(x.waktu).toLocaleString('id-ID', {dateStyle:'medium', timeStyle:'short'}))} · ${esc(x.ringkas)}</span></div>
+          <button class="btn kecil" type="button" data-salin="${x.id}">Salin</button></div>`; }).join('') + `<div class="baris-tombol"><button class="btn kecil" type="button" id="hapus-riwayat">Hapus semua riwayat</button></div>`
+      : `<div class="kosong"><span class="besar" aria-hidden="true">🕘</span>Belum ada riwayat. Racik prompt pertamamu dari beranda.</div>`}
+    </section>`;
+  document.querySelectorAll('[data-salin]').forEach(t => t.addEventListener('click', () => { const x = r.find(y => String(y.id) === t.dataset.salin); if(x) salin(x.prompt); }));
+  const h = $('#hapus-riwayat'); if(h) h.addEventListener('click', () => { if(confirm('Hapus semua riwayat?')){ simpan.hapus(K.riwayat); halamanRiwayat(); } });
+}
+
+/* ============ profil brand ============ */
+function halamanBrand(sub){
+  const daftar = semuaBrand();
+  const lama = sub && sub !== 'baru' ? daftar.find(x => x.id === sub) : null;
+  const b = lama || { platform:['Instagram','TikTok'], gaya: GAYA[0], panggilanAdmin:'Mimin' };
+  $('#isi').innerHTML = `
+    <button class="kembali" type="button" onclick="location.hash='#/'">← Semua alat</button>
+    <section class="panel" style="max-width:760px">
+      <h1>🧭 ${lama ? 'Ubah profil brand' : 'Profil brand baru'}</h1>
+      <p class="lead">Mimin pakai profil ini di semua alat. Makin jelas isinya, makin pas hasilnya. Data disimpan di browser perangkat ini.</p>
+      <form id="form-brand" novalidate>
+        <div class="dua-kolom">${FIELD_BRAND.slice(0,2).map(f => renderField(f, b[f.id])).join('')}</div>
+        ${FIELD_BRAND.slice(2,4).map(f => renderField(f, b[f.id])).join('')}
+        <div class="dua-kolom">${FIELD_BRAND.slice(4,7).map(f => renderField(f, b[f.id])).join('')}</div>
+        ${FIELD_BRAND.slice(7,9).map(f => renderField(f, b[f.id])).join('')}
+        <div class="dua-kolom">${FIELD_BRAND.slice(9).map(f => renderField(f, b[f.id])).join('')}</div>
+        <div id="brand-pesan" class="pesan bad hidden" role="alert"></div>
+        <div class="baris-tombol">
+          <button class="btn utama" type="submit">Simpan profil</button>
+          ${lama ? '<button class="btn" type="button" id="hapus-brand">Hapus brand ini</button>' : ''}
+          <button class="btn" type="button" id="ekspor-brand">Ekspor semua brand</button>
+          <label class="btn" style="margin:0">Impor<input type="file" accept="application/json" id="impor-brand" class="hidden"></label>
+        </div>
+      </form>
+    </section>`;
+  const form = $('#form-brand');
+  pasangChips(form);
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const v = bacaField(FIELD_BRAND);
+    const kurang = FIELD_BRAND.filter(f => f.wajib && !v[f.id]);
+    if(kurang.length){ const p = $('#brand-pesan'); p.textContent = 'Isi dulu: ' + kurang.map(f => f.label).join(', '); p.classList.remove('hidden'); $('#f-' + kurang[0].id).focus(); return; }
+    const data = semuaBrand();
+    const id = lama ? lama.id : 'b' + Date.now().toString(36);
+    const baru = { id, ...v };
+    const i = data.findIndex(x => x.id === id);
+    if(i >= 0) data[i] = baru; else data.push(baru);
+    simpan.tulis(K.brand, data); simpan.tulis(K.aktif, id);
+    isiPilihBrand(); toast('Profil ' + v.nama + ' tersimpan ✓'); location.hash = '#/';
+  });
+  const hapus = $('#hapus-brand');
+  if(hapus) hapus.addEventListener('click', () => {
+    if(!confirm('Hapus profil ' + lama.nama + '?')) return;
+    simpan.tulis(K.brand, semuaBrand().filter(x => x.id !== lama.id)); simpan.hapus(K.aktif);
+    isiPilihBrand(); location.hash = '#/';
+  });
+  $('#ekspor-brand').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(semuaBrand(), null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob); const a = document.createElement('a');
+    a.href = url; a.download = 'mimin-profil-brand.json'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+  $('#impor-brand').addEventListener('change', async e => {
+    const file = e.target.files[0]; if(!file) return;
+    try{
+      const isi = JSON.parse(await file.text());
+      if(!Array.isArray(isi)) throw 0;
+      const data = semuaBrand();
+      isi.filter(x => x && x.nama).forEach(x => { const id = x.id || 'b' + Math.random().toString(36).slice(2,8); const i = data.findIndex(y => y.id === id); const bersih = { ...x, id }; if(i >= 0) data[i] = bersih; else data.push(bersih); });
+      simpan.tulis(K.brand, data); isiPilihBrand(); toast('Profil brand diimpor ✓'); location.hash = '#/';
+    }catch(_){ toast('File tidak dikenali'); }
+  });
+}
+
+/* =====================================================================
+   ALAT LOKAL (tanpa AI)
+   ===================================================================== */
+function halamanLokal(a){
+  $('#isi').innerHTML = `<button class="kembali" type="button" onclick="location.hash='#/'">← Semua alat</button><div class="halaman-alat" id="lokal"></div>`;
+  if(a.id === 'engagement') kalkulatorEngagement(a);
+  if(a.id === 'panjang') cekPanjang(a);
+}
+
+function kalkulatorEngagement(a){
+  const isian = [['followers','Followers'],['reach','Reach / jangkauan'],['impresi','Impresi / views'],['like','Like'],['komentar','Komentar'],['share','Share'],['save','Save'],['klik','Klik link / chat']];
+  $('#lokal').innerHTML = `
+    <section class="panel">
+      <h1>${a.ikon} ${esc(a.judul)}</h1>
+      <p class="lead">Masukkan angka dari insight satu postingan atau satu bulan. Hitungan dilakukan di sini, bukan oleh AI.</p>
+      <div class="dua-kolom">${isian.map(([id, l]) => `<label class="f"><span>${l}</span><input type="number" min="0" inputmode="numeric" id="e-${id}" placeholder="0"></label>`).join('')}</div>
+    </section>
+    <section class="panel hasil"><div id="e-hasil"></div></section>`;
+  const hitung = () => {
+    const n = Object.fromEntries(isian.map(([id]) => [id, Math.max(0, Number($('#e-' + id).value) || 0)]));
+    const interaksi = n.like + n.komentar + n.share + n.save;
+    const baris = [];
+    const lampu = (nilai, [baik, oke]) => nilai >= baik ? '<span class="lampu ok">Bagus</span>' : nilai >= oke ? '<span class="lampu warn">Wajar</span>' : '<span class="lampu bad">Perlu dinaikkan</span>';
+    if(n.followers) baris.push(['ER by followers', interaksi / n.followers * 100, '(like + komentar + share + save) ÷ followers', [3, 1]]);
+    if(n.reach) baris.push(['ER by reach', interaksi / n.reach * 100, '(like + komentar + share + save) ÷ reach', [5, 2]]);
+    if(n.impresi) baris.push(['ER by impresi', interaksi / n.impresi * 100, 'interaksi ÷ impresi', [3, 1]]);
+    if(n.reach && n.followers) baris.push(['Jangkauan vs followers', n.reach / n.followers * 100, 'reach ÷ followers', [30, 10]]);
+    if(n.reach && (n.save || n.share)) baris.push(['Save + share per reach', (n.save + n.share) / n.reach * 100, '(save + share) ÷ reach', [1.5, 0.5]]);
+    if(n.reach && n.klik) baris.push(['Konversi klik', n.klik / n.reach * 100, 'klik ÷ reach', [1, 0.3]]);
+    $('#e-hasil').innerHTML = baris.length ? `
+      <h1 style="font-size:18px;margin:0 0 4px">Hasil</h1>
+      <p class="kecil" style="margin:0 0 12px">Total interaksi: <b>${angka(interaksi)}</b></p>
+      <div class="statistik">${baris.map(([j, v, rumus, ambang]) => `<div class="stat"><div class="ket">${j}</div><div class="nilai">${angka(v, 2)}%</div><div class="ket">${lampu(v, ambang)}</div><div class="ket" style="margin-top:4px">${rumus}</div></div>`).join('')}</div>
+      <div class="tips">Patokan "bagus/wajar" ini kasar dan berbeda tiap industri, platform, dan ukuran akun. Akun kecil biasanya punya ER lebih tinggi. Bandingkan terutama dengan angka akunmu sendiri bulan lalu.</div>`
+      : `<div class="kosong"><span class="besar" aria-hidden="true">🧮</span>Isi minimal followers atau reach, plus angka interaksi.</div>`;
+  };
+  $('#lokal').querySelectorAll('input').forEach(i => i.addEventListener('input', hitung));
+  hitung();
+}
+
+function cekPanjang(a){
+  const BATAS = [
+    ['Instagram caption', 2200, 125, 'terpotong "…selengkapnya" sekitar 125 karakter'],
+    ['TikTok caption', 4000, 100, 'tampil di layar sekitar 100 karakter pertama'],
+    ['Facebook post', 63206, 125, 'terpotong sekitar 125 karakter'],
+    ['LinkedIn post', 3000, 210, 'terpotong "…lihat selengkapnya" sekitar 210 karakter'],
+    ['X (Twitter)', 280, 280, 'akun non-premium'],
+    ['Threads', 500, 500, ''],
+    ['YouTube Shorts judul', 100, 70, 'sekitar 70 karakter terlihat di beranda'],
+  ];
+  $('#lokal').innerHTML = `
+    <section class="panel">
+      <h1>${a.ikon} ${esc(a.judul)}</h1>
+      <p class="lead">Tempel caption kamu. Mimin cek panjangnya untuk tiap platform dan seberapa banyak yang terlihat sebelum terpotong.</p>
+      <label class="f"><span>Caption</span><textarea id="c-teks" style="min-height:260px" placeholder="Tempel caption di sini…"></textarea></label>
+    </section>
+    <section class="panel hasil"><div id="c-hasil"></div></section>`;
+  const hitung = () => {
+    const t = $('#c-teks').value;
+    const karakter = [...t].length;
+    const kata = (t.trim().match(/\S+/g) || []).length;
+    const tagar = (t.match(/#[\p{L}\p{N}_]+/gu) || []).length;
+    const baris1 = t.split('\n')[0] || '';
+    $('#c-hasil').innerHTML = `
+      <div class="statistik" style="margin-bottom:16px">
+        <div class="stat"><div class="nilai">${angka(karakter)}</div><div class="ket">karakter</div></div>
+        <div class="stat"><div class="nilai">${angka(kata)}</div><div class="ket">kata</div></div>
+        <div class="stat"><div class="nilai">${angka(tagar)}</div><div class="ket">hashtag</div></div>
+      </div>
+      <table class="batas"><thead><tr><th>Platform</th><th>Batas</th><th>Status</th></tr></thead><tbody>
+      ${BATAS.map(([p, maks, lihat, ket]) => {
+        const s = karakter > maks ? `<span class="lampu bad">Lebih ${angka(karakter - maks)}</span>` : karakter > lihat ? `<span class="lampu warn">Terpotong</span>` : `<span class="lampu ok">Aman</span>`;
+        return `<tr><td>${p}${ket ? `<div class="kecil">${ket}</div>` : ''}</td><td>${angka(maks)}</td><td>${s}</td></tr>`;
+      }).join('')}
+      </tbody></table>
+      ${tagar > 5 ? '<div class="tips">Instagram sekarang membatasi maksimal 5 hashtag per postingan. Pilih yang paling relevan.</div>' : ''}
+      ${karakter ? `<p class="kecil" style="margin:14px 0 0">Kalimat pertama (${angka([...baris1].length)} karakter) adalah hook kamu. Usahakan di bawah 125 karakter supaya utuh terlihat.</p>` : ''}`;
+  };
+  $('#c-teks').addEventListener('input', hitung);
+  hitung();
+}
+
+mulai();
+</script>
+</body>
+</html>
