@@ -6,6 +6,7 @@ Seri aplikasi HTML BisaPakeAI oleh **CV. Mewlanet Kreator Digital**.
 |---|---|---|
 | Mimin — Social Media Management & Corporate Content Creator | mimin.bisapakeai.com | [`mimin/`](mimin/) |
 | Worksheet Anak — generator lembar kerja siap cetak | worksheetanak.net | [`situs/worksheetanak.net/`](situs/worksheetanak.net/) |
+| Excel Cepat — 8 template Excel UMKM + perakit rumus | excelcepat.com | [`situs/excelcepat.com/`](situs/excelcepat.com/) |
 
 ---
 
@@ -152,3 +153,8 @@ tools/build.mjs            node tools/build.mjs [domain...]
 3. Aktifkan SSL (AutoSSL / Let's Encrypt) untuk domain itu.
 
 Tidak butuh PHP, database, atau proxy, karena endpoint lisensi Revo mengizinkan CORS dari domain mana pun (sudah diuji di sandbox).
+
+### Excel Cepat: membuat ulang template
+Template `.xlsx` dibuat oleh `python3 tools/excelcepat/buat-template.py` (butuh `openpyxl`). Skrip ini menulis file ke `situs/excelcepat.com/_berkas/` dan `_berkas.js` (base64), yang disisipkan ke halaman saat `node tools/build.mjs`. Tombol unduh hanya muncul setelah lisensi aktif.
+
+Catatan: file ditanam di HTML. Orang yang paham teknis bisa mengambilnya lewat view-source, sama seperti semua pengecekan lisensi di browser. Untuk produk murah ini masih wajar. Kalau ingin lebih ketat, lampirkan file langsung di produk Revo, sehingga Revo yang mengirimkannya ke pembeli.

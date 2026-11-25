@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Rakit situs statis: situs/<domain>/index.html -> dist/<domain>/index.html
-// Baris `<!-- SISIP:_inti/nama-file.js -->` diganti isi file itu dalam <script>.
+// Baris `<!-- SISIP:path/relatif/dari/root.js -->` diganti isi file itu dalam <script>.
 // Hasil di dist/<domain>/ tinggal diunggah ke folder addon domain di cPanel.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -12,7 +12,8 @@ for (const d of situs) {
   const src = path.join(ROOT, 'situs', d);
   const out = path.join(ROOT, 'dist', d);
   fs.rmSync(out, { recursive: true, force: true });
-  fs.cpSync(src, out, { recursive: true });
+  // File/folder berawalan _ (mis. _berkas.js) hanya untuk disisipkan, tidak ikut diunggah.
+  fs.cpSync(src, out, { recursive: true, filter: (f) => !path.basename(f).startsWith('_') || f === src });
   const f = path.join(out, 'index.html');
   const html = fs.readFileSync(f, 'utf8').replace(/<!--\s*SISIP:([\w./-]+)\s*-->/g, (_, rel) => {
     const isi = fs.readFileSync(path.join(ROOT, rel), 'utf8');

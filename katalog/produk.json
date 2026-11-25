@@ -22,6 +22,17 @@
       "deskripsi": "Aplikasi web untuk membuat lembar kerja anak TK–SD kelas 3 siap cetak A4: penjumlahan/pengurangan, perkalian/pembagian, membandingkan bilangan, deret angka, menghitung benda, menebalkan huruf/angka/kata, dan pola garis. Soal diacak tanpa batas, plus kunci jawaban. Kode lisensi dikirim ke email setelah pembayaran; aktifkan di worksheetanak.net.",
       "revo_product_id": null,
       "batas_perangkat": 3
+    },
+    {
+      "slug": "excelcepat",
+      "folder": "situs/excelcepat.com",
+      "domain": "excelcepat.com",
+      "key_env": "REVO_KEY_EXCELCEPAT",
+      "judul": "Excel Cepat: 8 Template Excel UMKM Berformula",
+      "harga": 49000,
+      "deskripsi": "8 template Excel siap pakai untuk usaha: buku kas harian, stok barang, invoice, gaji & slip karyawan, anggaran bulanan, catatan penjualan, hutang-piutang, dan absensi. Rumus sudah jadi, tinggal isi. Kode lisensi dikirim ke email; aktifkan di excelcepat.com untuk mengunduh file.",
+      "revo_product_id": null,
+      "batas_perangkat": 3
     }
   ]
 }
