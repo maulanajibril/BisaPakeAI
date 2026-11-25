@@ -197,7 +197,10 @@ const LISENSI = {
   mode: 'revo',
   // Hanya untuk mode 'revo'. Isi dengan ID produk Mimin di dashboard Revo.
   revoApi: 'https://revo.id/api/v1',
-  revoProductId: '',
+  revoProductId: '76',
+  // Lisensi dari pesanan sandbox (license.livemode = false). Wajib false di produksi,
+  // true hanya saat menguji dengan key rv_test_.
+  terimaLisensiUji: false,
   endpoint: 'https://bisapakeai.com/wp-json/bisapakeai/v1/lisensi/cek',
   produk: 'mimin',
   // Hanya untuk mode 'edd'
@@ -208,7 +211,7 @@ const LISENSI = {
   cekUlangJam: 24,
   masaTenggangHari: 7,
   // Link checkout produk Mimin di Revo (salin dari dashboard Revo), atau halaman toko BisaPakeAI.
-  linkBeli: 'https://bisapakeai.com',
+  linkBeli: 'https://revo.id/mad/mimin-social-media-management-corporate-content-creator-2',
   // HANYA untuk uji lokal. Wajib false di produksi.
   IZINKAN_DEMO: false
 };
@@ -281,6 +284,8 @@ async function panggilRevo(aksi, body, signal){
 }
 function hasilRevo(res, j, ok){
   const lic = j.license || (j.data && j.data.license) || {};
+  if(ok && lic.livemode === false && !LISENSI.terimaLisensiUji)
+    return { valid:false, kode:'test_license', pesan:'Ini kode lisensi uji (sandbox), tidak berlaku di versi ini.' };
   if(ok) return { valid:true, pesan:'', kedaluwarsa: lic.expires_at || null, nama: '' };
   const kode = j.reason || j.code || '';
   const jaringan = res.status >= 500 || res.status === 429;
@@ -296,7 +301,10 @@ async function cekKeRevo(kode, aktifkan, signal){
     if(!(res.ok && j.reason === 'instance_not_activated')) return hasilRevo(res, j, false);
   }
   const { res, j } = await panggilRevo('activate', { ...dasar, label: (location.hostname || 'lokal') + ' · ' + (navigator.platform || 'perangkat') }, signal);
-  return hasilRevo(res, j, res.ok && j.activated !== false);
+  const r = hasilRevo(res, j, res.ok && j.activated !== false);
+  // Lisensi uji ditolak: kembalikan slot perangkatnya.
+  if(r.kode === 'test_license') panggilRevo('deactivate', dasar).catch(() => {});
+  return r;
 }
 async function lepasDariRevo(kode){
   if(LISENSI.mode !== 'revo' || !LISENSI.revoProductId) return;

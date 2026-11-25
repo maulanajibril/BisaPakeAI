@@ -2,7 +2,10 @@
 // Sinkron katalog/produk.json ke Revo.id lalu tanam revo_product_id ke tiap aplikasi.
 //   REVO_API_KEY=rv_test_... node tools/revo-sync.mjs           # jalankan
 //   node tools/revo-sync.mjs --dry                              # lihat rencana saja
-// Produk baru dibuat berstatus "draft". Aktifkan lisensi & batas perangkat di dashboard Revo.
+// Produk baru dibuat berstatus "draft" dengan lisensi aktif. Catatan dari uji sandbox 2026-11-25:
+// - license_enabled & license_activations HANYA bisa diset saat produk dibuat (update mengabaikannya).
+// - Produk draft tidak bisa di-checkout (422 checkout_status), juga di sandbox.
+// - Produk tidak terpisah sandbox/live: key rv_test_ pun membuat produk di toko asli.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRevoClient } from './revo-client.mjs';
@@ -22,6 +25,7 @@ const byTitle = new Map((Array.isArray(ada) ? ada : []).map((p) => [p.title, p])
 
 for (const p of katalog.produk) {
   const data = { type: 'digital', title: p.judul, price: p.harga, description: p.deskripsi, access_url: `https://${p.subdomain}`, status: 'draft' };
+  const lisensi = { license_enabled: true, license_activations: p.batas_perangkat ?? 3 };
   if (dry) { console.log(`[dry] ${p.revo_product_id ? 'update #' + p.revo_product_id : 'buat baru'}: ${p.judul} (Rp${p.harga})`); continue; }
   let hasil;
   if (p.revo_product_id) {
@@ -30,7 +34,12 @@ for (const p of katalog.produk) {
   } else if (byTitle.has(p.judul)) {
     hasil = byTitle.get(p.judul);
   } else {
-    hasil = await revo.createProduct(data);
+    hasil = await revo.createProduct({ ...data, ...lisensi });
+  }
+  if (hasil.license_enabled === false) {
+    console.error(`GAGAL ${p.slug}: produk #${hasil.id} tanpa lisensi, dan ini tidak bisa diubah lewat API. Ganti judulnya / hapus di dashboard, kosongkan revo_product_id, lalu jalankan ulang.`);
+    process.exitCode = 1;
+    continue;
   }
   p.revo_product_id = hasil.id;
   console.log(`OK ${p.slug} -> produk Revo #${hasil.id}`);
@@ -38,8 +47,9 @@ for (const p of katalog.produk) {
   const app = path.join(ROOT, p.folder, 'index.html');
   if (fs.existsSync(app)) {
     const html = fs.readFileSync(app, 'utf8');
-    const baru = html.replace(/revoProductId:\s*'[^']*'/, `revoProductId: '${hasil.id}'`);
-    if (baru !== html) { fs.writeFileSync(app, baru); console.log(`   revoProductId ditanam ke ${p.folder}/index.html`); }
+    let baru = html.replace(/revoProductId:\s*'[^']*'/, `revoProductId: '${hasil.id}'`);
+    if (hasil.url) baru = baru.replace(/linkBeli:\s*'[^']*'/, `linkBeli: '${hasil.url}'`);
+    if (baru !== html) { fs.writeFileSync(app, baru); console.log(`   revoProductId + linkBeli ditanam ke ${p.folder}/index.html`); }
   }
 }
 if (!dry) fs.writeFileSync(FILE, JSON.stringify(katalog, null, 2) + '\n');
