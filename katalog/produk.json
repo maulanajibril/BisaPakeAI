@@ -1,5 +1,5 @@
 {
-  "_catatan": "Satu entri = satu aplikasi seri BisaPakeAI = satu produk Revo. revo_product_id diisi otomatis oleh tools/revo-sync.mjs.",
+  "_catatan": "Satu entri = satu produk Revo. 'folder' = lokasi index.html (mimin/ atau situs/<domain>/). 'key_env' = nama variabel berisi API key toko Revo tempat produk ini (1 toko = 1 situs); kosong = REVO_API_KEY. revo_product_id diisi otomatis oleh tools/revo-sync.mjs.",
   "produk": [
     {
       "slug": "mimin",
@@ -9,6 +9,18 @@
       "harga": 99000,
       "deskripsi": "Aplikasi HTML untuk admin media sosial: 15 alat peracik prompt (kalender konten, caption, naskah Reels, balas netizen, mode krisis, laporan bulanan, dll.). Kode lisensi dikirim ke email setelah pembayaran.",
       "revo_product_id": 76,
+      "batas_perangkat": 3,
+      "key_env": ""
+    },
+    {
+      "slug": "worksheetanak",
+      "folder": "situs/worksheetanak.net",
+      "domain": "worksheetanak.net",
+      "key_env": "REVO_KEY_WORKSHEETANAK",
+      "judul": "Worksheet Anak: Generator Lembar Kerja Siap Cetak",
+      "harga": 39000,
+      "deskripsi": "Aplikasi web untuk membuat lembar kerja anak TK–SD kelas 3 siap cetak A4: penjumlahan/pengurangan, perkalian/pembagian, membandingkan bilangan, deret angka, menghitung benda, menebalkan huruf/angka/kata, dan pola garis. Soal diacak tanpa batas, plus kunci jawaban. Kode lisensi dikirim ke email setelah pembayaran; aktifkan di worksheetanak.net.",
+      "revo_product_id": null,
       "batas_perangkat": 3
     }
   ]

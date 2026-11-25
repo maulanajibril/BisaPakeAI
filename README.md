@@ -5,6 +5,7 @@ Seri aplikasi HTML BisaPakeAI oleh **CV. Mewlanet Kreator Digital**.
 | Seri | Subdomain | Folder |
 |---|---|---|
 | Mimin — Social Media Management & Corporate Content Creator | mimin.bisapakeai.com | [`mimin/`](mimin/) |
+| Worksheet Anak — generator lembar kerja siap cetak | worksheetanak.net | [`situs/worksheetanak.net/`](situs/worksheetanak.net/) |
 
 ---
 
@@ -124,3 +125,30 @@ Butuh Node 20+ dan tidak memerlukan dependensi tambahan. Key hanya dipakai di ko
 - **CORS**: dokumentasi Revo tidak menyebut apakah `/licenses/*` boleh dipanggil dari domain lain. Kalau browser menolak, sediakan proxy kecil (misal Cloudflare Worker) di subdomain sendiri, lalu arahkan `revoApi` ke proxy itu.
 - Field untuk menyalakan lisensi saat `POST /products` tidak didokumentasikan, jadi lisensi dinyalakan manual di dashboard.
 - Uji ke sandbox Revo yang sebenarnya belum dilakukan. Alurnya baru diuji dengan server tiruan.
+
+---
+
+## Situs per domain (`situs/<domain>/`)
+
+Setiap domain punya satu situs statis: landing page dan aplikasinya ada di **satu** `index.html`. Pembelian lewat checkout Revo, lalu aplikasi dibuka dengan kode lisensi Revo. **1 situs = 1 toko (halaman kreator) Revo.**
+
+```
+_inti/lisensi-revo.js      modul lisensi Revo bersama (activate/validate/deactivate)
+situs/<domain>/index.html  sumber situs, berisi <!-- SISIP:_inti/lisensi-revo.js -->
+dist/<domain>/index.html   hasil rakit, file inilah yang diunggah
+tools/build.mjs            node tools/build.mjs [domain...]
+```
+
+### Menambah toko Revo untuk satu situs
+1. Di dashboard Revo, buat halaman kreator/toko baru untuk domain itu.
+2. Di toko itu buka **Developer**, buat API key, lalu simpan sebagai variabel dengan nama yang ada di kolom `key_env` katalog (misal `REVO_KEY_WORKSHEETANAK`). Simpan di secret atau `.env`, **jangan di-commit**.
+3. Jalankan `node tools/revo-sync.mjs worksheetanak`. Skrip ini membuat produk (draft, lisensi aktif) di toko itu, lalu menanam `revoProductId` dan `linkBeli` ke `situs/<domain>/index.html`.
+4. Isi `linkToko` di blok `SITUS` dengan URL halaman toko Revo-nya.
+5. `node tools/build.mjs`, lalu aktifkan produknya di dashboard Revo saat siap dijual.
+
+### Pasang di cPanel
+1. **Domains → Create a New Domain** (addon domain), misal `worksheetanak.net`, dengan document root `public_html/worksheetanak.net`.
+2. Unggah `dist/worksheetanak.net/index.html` ke folder tersebut lewat File Manager.
+3. Aktifkan SSL (AutoSSL / Let's Encrypt) untuk domain itu.
+
+Tidak butuh PHP, database, atau proxy, karena endpoint lisensi Revo mengizinkan CORS dari domain mana pun (sudah diuji di sandbox).
