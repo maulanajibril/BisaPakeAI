@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Excel Cepat: Template Excel UMKM Berformula + Perakit Rumus</title>
+<meta name="description" content="8 template Excel siap pakai untuk UMKM (buku kas, stok, invoice, gaji, anggaran, penjualan, hutang-piutang, absensi) plus perakit rumus Excel gratis. Sekali bayar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5F8F6; --kartu:#FFFFFF; --teks:#18231E; --redup:#5D6B64; --garis:#DCE5E0;
+  --utama:#1F6F50; --utama-tua:#17573E; --aksen:#E3F2EA; --kuning:#FFF4CC;
+  --bayang:0 10px 30px rgba(20,60,40,.07);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111815; --kartu:#18211D; --teks:#E9F1ED; --redup:#A4B4AC; --garis:#2A3731; --aksen:#1E3A2E; --utama:#3BAA7E; --utama-tua:#2E8F68; --bayang:0 10px 30px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{ --bg:#111815; --kartu:#18211D; --teks:#E9F1ED; --redup:#A4B4AC; --garis:#2A3731; --aksen:#1E3A2E; --utama:#3BAA7E; --utama-tua:#2E8F68; --bayang:0 10px 30px rgba(0,0,0,.35); }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--teks);font:16px/1.6 "Plus Jakarta Sans",system-ui,sans-serif}
+a{color:var(--utama)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 20px;font:800 15px "Plus Jakarta Sans",sans-serif;cursor:pointer;text-decoration:none}
+.btn.utama{background:var(--utama);color:#fff}.btn.utama:hover{background:var(--utama-tua)}
+.btn.garis{background:transparent;color:var(--teks);border:2px solid var(--garis)}
+.btn.kecil{padding:8px 14px;font-size:14px}
+header.atas{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--garis)}
+header.atas .wrap{display:flex;align-items:center;gap:16px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--teks);text-decoration:none}
+.logo i{font-style:normal;width:36px;height:36px;border-radius:9px;background:var(--utama);color:#fff;display:grid;place-items:center;font:800 15px "JetBrains Mono",monospace}
+nav.menu{margin-left:auto;display:flex;gap:18px;align-items:center}
+nav.menu a{color:var(--redup);text-decoration:none;font-weight:600}
+@media (max-width:720px){ nav.menu a.opsional{display:none} }
+.hero{padding:56px 0 24px;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(30px,5vw,46px);line-height:1.15;margin:0 0 16px;letter-spacing:-.02em}
+.hero h1 span{color:var(--utama)}
+.hero p.lead{font-size:18px;color:var(--redup);margin:0 0 24px}
+.hero .aksi{display:flex;gap:12px;flex-wrap:wrap}
+.sheet{background:var(--kartu);border:1px solid var(--garis);border-radius:14px;box-shadow:var(--bayang);overflow:hidden;font-size:13px}
+.sheet .bar{display:flex;gap:6px;padding:8px 10px;border-bottom:1px solid var(--garis);font:500 12px "JetBrains Mono",monospace;color:var(--redup)}
+.sheet .bar b{color:var(--utama)}
+.sheet table{border-collapse:collapse;width:100%}
+.sheet th{background:#1F6F50;color:#fff;padding:6px;font-weight:600;text-align:left}
+.sheet td{padding:6px;border-top:1px solid var(--garis)}
+.sheet td.r{text-align:right;font-family:"JetBrains Mono",monospace}
+.sheet td.f{background:color-mix(in srgb,var(--garis) 45%,transparent)}
+.sheet tr.merah td{background:#FDE2DC;color:#8A2410}
+@media (max-width:860px){ .hero{grid-template-columns:1fr;padding-top:32px} }
+section{padding:40px 0}
+h2{font-size:clamp(24px,3.5vw,32px);margin:0 0 8px;letter-spacing:-.01em}
+p.sub{color:var(--redup);margin:0 0 24px}
+.kartu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.tpl{background:var(--kartu);border:1px solid var(--garis);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.tpl span.ikon{font-size:26px}
+.tpl b{font-size:16px}
+.tpl p{margin:0;color:var(--redup);font-size:14px;flex:1}
+.tpl button{align-self:flex-start;margin-top:6px}
+.gembok{font-size:12px;color:var(--redup)}
+/* perakit */
+.perakit{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+.perakit > *{min-width:0}
+@media (max-width:860px){ .perakit{grid-template-columns:1fr} }
+.daftar-tugas{display:grid;gap:6px}
+.daftar-tugas button{text-align:left;border:2px solid var(--garis);background:var(--kartu);color:var(--teks);border-radius:12px;padding:10px 12px;font:600 14px "Plus Jakarta Sans",sans-serif;cursor:pointer}
+.daftar-tugas button[aria-pressed="true"]{border-color:var(--utama);background:var(--aksen)}
+.panel{background:var(--kartu);border:1px solid var(--garis);border-radius:16px;padding:18px;box-shadow:var(--bayang)}
+label.f{display:block;margin-bottom:12px;font-size:14px;font-weight:600}
+label.f span{display:block;margin-bottom:4px}
+label.f small{display:block;font-weight:400;color:var(--redup)}
+label.f input,label.f select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--garis);background:var(--bg);color:var(--teks);font:15px "Plus Jakarta Sans",sans-serif}
+.dua{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sep{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;margin-bottom:14px}
+.sep button{border:2px solid var(--garis);background:transparent;color:var(--teks);border-radius:999px;padding:4px 12px;font:600 13px "Plus Jakarta Sans",sans-serif;cursor:pointer}
+.sep button[aria-pressed="true"]{border-color:var(--utama);background:var(--aksen)}
+.hasil{background:#0F1A15;color:#C9F2DE;border-radius:12px;padding:14px;font:500 15px/1.5 "JetBrains Mono",monospace;word-break:break-all;margin:6px 0 8px}
+.penjelasan{color:var(--redup);font-size:14px}
+.penjelasan code{font-family:"JetBrains Mono",monospace;background:var(--aksen);padding:1px 5px;border-radius:5px;color:var(--teks)}
+.harga{background:var(--kartu);border:2px solid var(--utama);border-radius:22px;padding:28px;max-width:520px;margin:0 auto;text-align:center;box-shadow:var(--bayang)}
+.harga .angka{font-size:44px;font-weight:800;margin:6px 0}
+.harga ul{text-align:left;margin:16px auto;max-width:380px;padding-left:20px;color:var(--redup)}
+.catatan{font-size:13px;color:var(--redup)}
+details{background:var(--kartu);border:1px solid var(--garis);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+details summary{font-weight:800;cursor:pointer}
+details p{margin:8px 0 0;color:var(--redup)}
+footer.bawah{border-top:1px solid var(--garis);padding:24px 0 40px;color:var(--redup);font-size:14px}
+footer.bawah .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+.layar{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:50;padding:16px}
+.modal{background:var(--kartu);border-radius:20px;padding:24px;max-width:420px;width:100%}
+.modal h3{margin:0 0 6px}
+.pesan{border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:10px}
+.pesan.bad{background:#FDE2DC;color:#8A2410}.pesan.ok{background:#DDF3E8;color:#185C42}
+.aksi-gen{display:flex;gap:8px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:#18231E;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;transition:transform .25s;z-index:60}
+.toast.tampil{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header class="atas">
+  <div class="wrap">
+    <a class="logo" href="#"><i aria-hidden="true">fx</i>Excel Cepat</a>
+    <nav class="menu">
+      <a class="opsional" href="#template">Template</a>
+      <a class="opsional" href="#rumus">Perakit rumus</a>
+      <a class="opsional" href="#harga">Harga</a>
+      <button class="btn garis kecil" id="buka-lisensi" type="button">Aktifkan lisensi</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <h1>Pembukuan usaha <span>rapi di Excel</span>, tanpa harus jago rumus.</h1>
+      <p class="lead">8 template siap pakai untuk UMKM: tinggal isi angkanya, rumusnya sudah bekerja. Ditambah perakit rumus untuk membuat rumus Excel sendiri, lengkap dengan penjelasannya.</p>
+      <div class="aksi">
+        <a class="btn utama" href="#harga">Dapatkan 8 template</a>
+        <a class="btn garis" href="#rumus">Coba perakit rumus (gratis)</a>
+      </div>
+      <p class="catatan" style="margin-top:16px">Bisa dibuka di Microsoft Excel 2010+, Google Sheets, dan WPS Office.</p>
+    </div>
+    <div class="sheet" aria-hidden="true">
+      <div class="bar"><b>F3</b> =C3+D3−E3</div>
+      <table>
+        <tr><th>Kode</th><th>Barang</th><th>Awal</th><th>Masuk</th><th>Keluar</th><th>Akhir</th></tr>
+        <tr><td>B001</td><td>Tepung</td><td class="r">25</td><td class="r f">20</td><td class="r f">18</td><td class="r f">27</td></tr>
+        <tr><td>B002</td><td>Gula</td><td class="r">15</td><td class="r f">0</td><td class="r f">4</td><td class="r f">11</td></tr>
+        <tr class="merah"><td>B003</td><td>Mentega</td><td class="r">6</td><td class="r">0</td><td class="r">3</td><td class="r">3</td></tr>
+        <tr><td>B004</td><td>Telur</td><td class="r">120</td><td class="r f">0</td><td class="r f">45</td><td class="r f">75</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <section id="template">
+    <div class="wrap">
+      <h2>8 template Excel untuk usaha</h2>
+      <p class="sub">Setiap file punya sheet Petunjuk, kolom isian berwarna putih, dan kolom rumus berwarna abu-abu. Semua rumus sudah dicek hitungannya.</p>
+      <div class="kartu-grid" id="daftar-template"></div>
+    </div>
+  </section>
+
+  <section id="rumus">
+    <div class="wrap">
+      <h2>Perakit rumus Excel</h2>
+      <p class="sub">Pilih kebutuhan, isi kolom dan sel yang kamu pakai, lalu salin rumusnya. Gratis untuk semua. Kalau Excel menolak rumusnya, coba ganti pemisah argumen di bawah.</p>
+      <div class="perakit">
+        <div class="daftar-tugas" id="daftar-tugas" role="group" aria-label="Jenis rumus"></div>
+        <div class="panel">
+          <div class="sep">Pemisah argumen:
+            <button type="button" data-sep=";" aria-pressed="true">; (Windows dengan format angka Indonesia)</button>
+            <button type="button" data-sep="," aria-pressed="false">, (format angka Inggris / Google Sheets)</button>
+          </div>
+          <div id="isian-tugas"></div>
+          <div class="hasil" id="hasil-rumus" aria-live="polite"></div>
+          <div class="aksi-gen"><button class="btn utama kecil" id="salin" type="button">Salin rumus</button></div>
+          <p class="penjelasan" id="penjelasan"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="harga">
+    <div class="wrap">
+      <div class="harga">
+        <h2>Sekali bayar, pakai selamanya</h2>
+        <div class="angka" id="teks-harga">Rp49.000</div>
+        <ul>
+          <li>8 file template Excel (.xlsx) berformula</li>
+          <li>Unduh ulang kapan saja dari halaman ini</li>
+          <li>Pakai untuk usaha sendiri, sebanyak apa pun</li>
+          <li>Aktif di <b id="teks-perangkat">3</b> perangkat</li>
+          <li>Template baru ditambahkan tanpa biaya tambahan</li>
+        </ul>
+        <a class="btn utama" id="link-beli" href="#" target="_blank" rel="noopener">Beli lewat Revo</a>
+        <p class="catatan">Bayar dengan QRIS atau Virtual Account. Kode lisensi dikirim ke email setelah pembayaran berhasil, lalu tombol unduh di atas langsung terbuka.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap" style="max-width:760px">
+      <h2>Pertanyaan yang sering ditanyakan</h2>
+      <details><summary>Bagaimana cara mendapatkan filenya?</summary><p>Setelah membayar, kode lisensi dikirim ke email. Tekan "Aktifkan lisensi" di halaman ini, masukkan kodenya, lalu tombol "Unduh" di setiap template terbuka.</p></details>
+      <details><summary>Saya tidak paham Excel sama sekali. Bisa?</summary><p>Bisa. Kamu cukup mengisi kolom berwarna putih. Kolom abu-abu sudah berisi rumus dan menghitung sendiri. Setiap file juga punya sheet Petunjuk.</p></details>
+      <details><summary>Rumusnya tidak jalan, muncul error?</summary><p>Pastikan file dibuka di Excel 2010 ke atas atau Google Sheets, dan kolom abu-abu tidak diketik ulang. Kalau tetap bermasalah, hubungi penjual lewat halaman toko di Revo.</p></details>
+      <details><summary>Apakah menghitung pajak dan BPJS?</summary><p>Tidak. Template gaji tidak menghitung PPh 21 dan BPJS secara otomatis karena aturannya sering berubah. Nilainya bisa dimasukkan ke kolom Potongan.</p></details>
+      <details><summary>Bagaimana kalau ingin refund?</summary><p>Hubungi penjual lewat halaman toko di Revo (tautan di bawah). Pembayaran dan refund diproses oleh Revo.id.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="bawah">
+  <div class="wrap">
+    <span>© <span class="tahun"></span> <span id="nama-penjual"></span> · excelcepat.com</span>
+    <span class="catatan" id="status-lis"></span>
+    <span><a id="link-toko" href="#" target="_blank" rel="noopener">Kontak penjual (Revo)</a> · Pembayaran diproses oleh Revo.id</span>
+  </div>
+</footer>
+
+<div class="layar hidden" id="layar-lisensi" role="dialog" aria-modal="true" aria-labelledby="judul-lisensi">
+  <div class="modal">
+    <h3 id="judul-lisensi">Aktifkan lisensi</h3>
+    <p class="catatan" style="margin-top:0">Masukkan email pembelian dan kode lisensi dari email setelah pembayaran berhasil.</p>
+    <form id="form-lisensi" novalidate>
+      <label class="f"><span>Email pembelian</span><input type="email" id="lis-email" autocomplete="email" placeholder="nama@email.com"></label>
+      <label class="f"><span>Kode lisensi</span><input id="lis-kode" autocomplete="off" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX"></label>
+      <div class="pesan hidden" id="lis-pesan" role="status"></div>
+      <div class="aksi-gen">
+        <button class="btn utama" id="lis-tombol" type="submit">Aktifkan</button>
+        <button class="btn garis" id="lis-tutup" type="button">Tutup</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== Pengaturan situs: diisi otomatis oleh tools/revo-sync.mjs ===== */
+const SITUS = {
+  revoProductId: '',
+  linkBeli: '',
+  linkToko: 'https://revo.id',
+  harga: 49000,
+  batasPerangkat: 3,
+  penjual: 'CV. Mewlanet Kreator Digital',
+  terimaLisensiUji: false
+};
+</script>
+<!-- SISIP:_inti/lisensi-revo.js -->
+<!-- SISIP:situs/excelcepat.com/_berkas.js -->
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('tampil'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('tampil'), 2200); }
+document.querySelectorAll('.tahun').forEach(el => el.textContent = new Date().getFullYear());
+$('#nama-penjual').textContent = SITUS.penjual;
+$('#teks-harga').textContent = 'Rp' + SITUS.harga.toLocaleString('id-ID');
+$('#teks-perangkat').textContent = SITUS.batasPerangkat;
+$('#link-beli').href = SITUS.linkBeli || SITUS.linkToko;
+$('#link-toko').href = SITUS.linkToko;
+
+/* ===== template ===== */
+let berlisensi = false;
+function tampilTemplate(){
+  $('#daftar-template').innerHTML = BERKAS.map(b => `<div class="tpl"><span class="ikon">${b.ikon}</span><b>${esc(b.nama)}</b><p>${esc(b.desk)}</p>
+    ${berlisensi ? `<button class="btn utama kecil" data-unduh="${b.slug}" type="button">⬇ Unduh .xlsx</button>` : `<button class="btn garis kecil" data-kunci type="button">🔒 Unduh setelah beli</button>`}</div>`).join('');
+}
+$('#daftar-template').addEventListener('click', e => {
+  if(e.target.closest('[data-kunci]')){ location.hash = '#harga'; return; }
+  const b = e.target.closest('[data-unduh]'); if(!b || !berlisensi) return;
+  const f = BERKAS.find(x => x.slug === b.dataset.unduh);
+  const bin = atob(f.b64), buf = new Uint8Array(bin.length); for(let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  const url = URL.createObjectURL(new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+  const a = document.createElement('a'); a.href = url; a.download = f.file; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  toast('Mengunduh ' + f.file);
+});
+
+/* ===== perakit rumus ===== */
+let SEP = ';';
+// Referensi sel/kolom: huruf kolom dikapitalkan, nama sheet dibiarkan (diberi kutip bila ada spasi).
+const kol = s => { const t = String(s || '').trim(); const i = t.lastIndexOf('!');
+  const ref = t.slice(i + 1).toUpperCase().replace(/[^A-Z0-9$:]/g, '');
+  if(i < 0) return ref; let sh = t.slice(0, i).replace(/^'|'$/g, '');
+  return (/[^\w.]/.test(sh) ? "'" + sh.replace(/'/g, "''") + "'" : sh) + '!' + ref; };
+const teks = s => '"' + String(s ?? '').replace(/"/g, '""') + '"';
+const nilai = s => { const t = String(s ?? '').trim(); return t !== '' && !isNaN(Number(t.replace(',', '.'))) ? t.replace(',', SEP === ';' ? ',' : '.') : teks(t); };
+const f = (nama, ...arg) => `${nama}(${arg.join(SEP)})`;
+const TUGAS = {
+  cari: { nama:'🔎 Cari data dari tabel lain', isian:[['cari','Sel yang dicari','A2'],['kolomKunci','Kolom kunci di tabel sumber','Barang!A:A'],['kolomHasil','Kolom hasil di tabel sumber','Barang!C:C'],['kosong','Jika tidak ketemu, tampilkan','Tidak ada']],
+    buat: v => '=' + f('IFERROR', f('INDEX', kol(v.kolomHasil), f('MATCH', kol(v.cari), kol(v.kolomKunci), '0')), teks(v.kosong)),
+    jelas: v => `<code>MATCH</code> mencari posisi ${esc(kol(v.cari))} di ${esc(kol(v.kolomKunci))} (0 = harus sama persis). <code>INDEX</code> mengambil isi baris itu dari ${esc(kol(v.kolomHasil))}. <code>IFERROR</code> menampilkan "${esc(v.kosong)}" kalau tidak ketemu. Rumus ini jalan di semua versi Excel, tidak seperti XLOOKUP yang hanya ada di Excel 2021/365.` },
+  jumlahJika: { nama:'➕ Jumlah dengan syarat', isian:[['kolomJumlah','Kolom yang dijumlah','D:D'],['kolomSyarat','Kolom syarat','C:C'],['syarat','Syarat (teks atau angka)','Penjualan'],['kolomTgl','Kolom tanggal (opsional)','A:A'],['bulan','Bulan (1-12, opsional)','11'],['tahun','Tahun (opsional)','2026']],
+    buat: v => { const a = [kol(v.kolomJumlah), kol(v.kolomSyarat), nilai(v.syarat)];
+      if(v.kolomTgl && v.bulan && v.tahun){ const d = f('DATE', v.tahun, v.bulan, '1'); a.push(kol(v.kolomTgl), `">="&${d}`, kol(v.kolomTgl), `"<="&${f('EOMONTH', d, '0')}`); }
+      return '=' + f('SUMIFS', ...a); },
+    jelas: v => `<code>SUMIFS</code> menjumlah ${esc(kol(v.kolomJumlah))} hanya pada baris yang ${esc(kol(v.kolomSyarat))}-nya "${esc(v.syarat)}"${v.kolomTgl && v.bulan ? `, dan tanggalnya di bulan ${esc(v.bulan)}/${esc(v.tahun)} (dari tanggal 1 sampai akhir bulan, dihitung dengan <code>EOMONTH</code>)` : ''}.` },
+  hitungJika: { nama:'🔢 Hitung jumlah baris dengan syarat', isian:[['kolom','Kolom yang dicek','H:H'],['syarat','Isi yang dihitung','TERLAMBAT']],
+    buat: v => '=' + f('COUNTIF', kol(v.kolom), nilai(v.syarat)),
+    jelas: v => `<code>COUNTIF</code> menghitung berapa sel di ${esc(kol(v.kolom))} yang isinya "${esc(v.syarat)}". Untuk syarat angka, tulis misalnya <code>"&gt;100"</code>.` },
+  nilai: { nama:'🏷️ Kategori bertingkat (nilai/grade)', isian:[['sel','Sel angka','B2'],['batas','Batas bawah tiap kategori (besar ke kecil)','90, 80, 70, 60'],['label','Nama kategori (urutan sama + 1 sisa)','A, B, C, D, E']],
+    buat: v => { const b = String(v.batas).split(',').map(s => s.trim()).filter(Boolean), l = String(v.label).split(',').map(s => s.trim());
+      let r = teks(l[b.length] ?? ''); for(let i = b.length - 1; i >= 0; i--) r = f('IF', `${kol(v.sel)}>=${b[i]}`, teks(l[i] ?? ''), r); return '=' + r; },
+    jelas: v => `<code>IF</code> bertingkat dicek dari batas terbesar: kalau ${esc(kol(v.sel))} ≥ batas pertama, hasilnya kategori pertama, kalau tidak lanjut ke batas berikutnya, dan seterusnya. Kategori terakhir dipakai untuk sisanya.` },
+  hariKerja: { nama:'📅 Hitung hari kerja / umur', isian:[['mulai','Sel tanggal mulai','B2'],['selesai','Sel tanggal selesai (kosong = hari ini)','C2'],['jenis','Hitung','select:hari kerja (Senin–Jumat)|selisih hari|umur dalam tahun|lama dalam bulan']],
+    buat: v => { const s = v.selesai ? kol(v.selesai) : 'TODAY()';
+      if(v.jenis.startsWith('hari kerja')) return '=' + f('NETWORKDAYS', kol(v.mulai), s);
+      if(v.jenis.startsWith('selisih')) return `=${s}-${kol(v.mulai)}`;
+      return '=' + f('DATEDIF', kol(v.mulai), s, v.jenis.startsWith('umur') ? '"Y"' : '"M"'); },
+    jelas: v => v.jenis.startsWith('hari kerja') ? '<code>NETWORKDAYS</code> menghitung hari Senin–Jumat di antara dua tanggal (termasuk keduanya). Tambahkan daftar tanggal libur nasional sebagai argumen ketiga bila perlu.'
+      : v.jenis.startsWith('selisih') ? 'Tanggal di Excel adalah angka hari, jadi selisihnya cukup dikurangkan. Format selnya sebagai Angka, bukan Tanggal.'
+      : '<code>DATEDIF</code> menghitung selisih utuh dalam tahun ("Y") atau bulan ("M"). Fungsi ini tidak muncul di daftar saran Excel, tapi tetap bisa dipakai.' },
+  rapikan: { nama:'🧹 Rapikan teks', isian:[['sel','Sel teks','A2'],['jenis','Jadikan','select:Huruf Awal Kapital|HURUF BESAR|huruf kecil|hapus spasi berlebih saja']],
+    buat: v => { const t = f('TRIM', kol(v.sel)); return '=' + (v.jenis.startsWith('Huruf Awal') ? f('PROPER', t) : v.jenis.startsWith('HURUF') ? f('UPPER', t) : v.jenis.startsWith('huruf') ? f('LOWER', t) : t); },
+    jelas: () => '<code>TRIM</code> membuang spasi di awal, akhir, dan spasi dobel di tengah. <code>PROPER</code>, <code>UPPER</code>, dan <code>LOWER</code> mengubah huruf besar-kecilnya. Setelah itu, salin hasilnya lalu Tempel Spesial → Nilai untuk menimpa data asli.' },
+  gabung: { nama:'🔗 Gabung teks & angka rupiah', isian:[['sel1','Sel pertama','A2'],['sel2','Sel kedua (angka)','B2'],['antara','Teks penghubung',' total ']],
+    buat: v => `=${kol(v.sel1)}&${teks(v.antara)}&${f('TEXT', kol(v.sel2), '"Rp#,##0"')}`,
+    jelas: () => 'Tanda <code>&amp;</code> menyambung teks. <code>TEXT</code> mengubah angka menjadi teks berformat rupiah supaya tidak tampil seperti 1500000. Di Excel berbahasa Indonesia, pemisah ribuan dalam format bisa perlu ditulis <code>"Rp#.##0"</code>.' },
+  persen: { nama:'📈 Persentase & pembulatan', isian:[['bagian','Sel bagian','C2'],['total','Sel total','B2'],['desimal','Jumlah desimal','0']],
+    buat: v => '=' + f('IFERROR', f('ROUND', `${kol(v.bagian)}/${kol(v.total)}*100`, v.desimal || '0'), '0'),
+    jelas: v => `Membagi ${esc(kol(v.bagian))} dengan ${esc(kol(v.total))}, dikali 100, lalu dibulatkan ke ${esc(v.desimal || 0)} desimal dengan <code>ROUND</code>. <code>IFERROR</code> mencegah error #DIV/0! saat total masih kosong.` }
+};
+let tugas = 'cari'; const isian = {};
+function tampilTugas(){
+  $('#daftar-tugas').innerHTML = Object.entries(TUGAS).map(([k, t]) => `<button type="button" data-t="${k}" aria-pressed="${k === tugas}">${esc(t.nama)}</button>`).join('');
+  const t = TUGAS[tugas], v = isian[tugas] || (isian[tugas] = {});
+  $('#isian-tugas').innerHTML = t.isian.map(([id, label, bawaan]) => {
+    if(String(bawaan).startsWith('select:')){ const pil = bawaan.slice(7).split('|'); if(v[id] == null) v[id] = pil[0];
+      return `<label class="f"><span>${esc(label)}</span><select data-i="${id}">${pil.map(p => `<option${p === v[id] ? ' selected' : ''}>${esc(p)}</option>`).join('')}</select></label>`; }
+    if(v[id] == null) v[id] = bawaan;
+    return `<label class="f"><span>${esc(label)}</span><input data-i="${id}" value="${esc(v[id])}" spellcheck="false"></label>`;
+  }).join('');
+  hitung();
+}
+function hitung(){ const t = TUGAS[tugas], v = isian[tugas]; $('#hasil-rumus').textContent = t.buat(v); $('#penjelasan').innerHTML = t.jelas(v); }
+$('#daftar-tugas').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if(!b) return; tugas = b.dataset.t; tampilTugas(); });
+$('#isian-tugas').addEventListener('input', e => { const id = e.target.dataset.i; if(!id) return; isian[tugas][id] = e.target.value; hitung(); });
+document.querySelectorAll('[data-sep]').forEach(b => b.addEventListener('click', () => {
+  SEP = b.dataset.sep; document.querySelectorAll('[data-sep]').forEach(x => x.setAttribute('aria-pressed', x === b)); hitung();
+}));
+$('#salin').addEventListener('click', async () => { try{ await navigator.clipboard.writeText($('#hasil-rumus').textContent); toast('Rumus disalin'); }catch(e){ toast('Salin manual: tekan lama pada rumus'); } });
+
+/* ===== lisensi ===== */
+const lisensi = buatLisensiRevo({ productId: SITUS.revoProductId, terimaLisensiUji: SITUS.terimaLisensiUji, kunci:'exc.lisensi' });
+function aturLisensi(aktif, l, peringatan){
+  berlisensi = aktif; tampilTemplate();
+  $('#buka-lisensi').textContent = aktif ? 'Lisensi aktif ✓' : 'Aktifkan lisensi';
+  $('#status-lis').innerHTML = aktif ? `${esc(peringatan || '')} Lisensi: ${esc(l.email || 'aktif')} · <a href="#" id="lepas">Lepas lisensi</a>` : '';
+  if(aktif) $('#lepas').addEventListener('click', async ev => { ev.preventDefault(); if(!confirm('Lepas lisensi dari perangkat ini?')) return; await lisensi.lepas(); aturLisensi(false); });
+}
+function pesan(t, jenis){ const el = $('#lis-pesan'); el.textContent = t; el.className = 'pesan ' + jenis; }
+$('#buka-lisensi').addEventListener('click', () => $('#layar-lisensi').classList.remove('hidden'));
+$('#lis-tutup').addEventListener('click', () => $('#layar-lisensi').classList.add('hidden'));
+$('#layar-lisensi').addEventListener('click', e => { if(e.target.id === 'layar-lisensi') $('#layar-lisensi').classList.add('hidden'); });
+$('#form-lisensi').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = $('#lis-email').value.trim();
+  if(!/^\S+@\S+\.\S+$/.test(email)){ pesan('Email belum benar.', 'bad'); return; }
+  const t = $('#lis-tombol'); t.disabled = true; t.textContent = 'Mengecek…';
+  const r = await lisensi.aktifkan(email, $('#lis-kode').value);
+  t.disabled = false; t.textContent = 'Aktifkan';
+  if(!r.valid){ pesan(r.pesan, 'bad'); return; }
+  pesan('Lisensi aktif. Tombol unduh sudah terbuka.', 'ok'); $('#lis-kode').value = '';
+  aturLisensi(true, { email });
+  setTimeout(() => { $('#layar-lisensi').classList.add('hidden'); location.hash = '#template'; }, 900);
+});
+
+tampilTemplate(); tampilTugas();
+lisensi.status().then(s => { if(s.aktif) aturLisensi(true, s.lisensi, s.peringatan); else if(s.pesan){ $('#layar-lisensi').classList.remove('hidden'); pesan(s.pesan, 'bad'); } });
+</script>
+</body>
+</html>
