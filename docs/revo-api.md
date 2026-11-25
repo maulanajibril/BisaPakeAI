@@ -49,3 +49,21 @@ Tool: `get_store`, `list_products`, `create_product`, `update_product`, `create_
 
 ## Yang tidak didokumentasikan
 Skema respons lengkap, durasi kedaluwarsa checkout, API refund live, idempotency key, aturan validasi `return_url`, rotasi secret, dan batas jumlah produk/domain per toko. **Tanyakan ke Revo soal pemakaian satu toko untuk banyak domain.**
+
+## Hasil uji sandbox (2026-11-25)
+Diuji dengan key `rv_test_` ke API asli, plus Chromium (Playwright) menjalankan `mimin/index.html`.
+
+| Uji | Hasil |
+|---|---|
+| `tools/revo-sync.mjs` buat produk | OK, produk Mimin = #76 (draft, lisensi aktif, 3 perangkat). Jalan ulang hanya update, tidak dobel. |
+| `license_enabled` / `license_activations` | Hanya berlaku saat **create**. `POST /products/{id}` mengabaikannya. Sync sekarang gagal keras kalau produk tanpa lisensi. |
+| Produk sandbox vs live | Produk **tidak** terpisah: key uji membuat produk di toko asli. Yang terpisah hanya order, lisensi, langganan. |
+| Checkout produk draft | Ditolak `422 checkout_status` ("Produk ini sedang tidak dijual"), juga di sandbox. Uji alur bayar dilakukan dengan produk aktif #3. |
+| Checkout + `POST /sandbox/orders/{nomor}/pay` | OK, order `paid`, lisensi terbit `active`, `livemode:false`. |
+| `/licenses/activate`, `validate`, `deactivate` | OK dari browser. Hitungan aktivasi naik/turun sesuai. Kunci produk lain → `403 product_mismatch`. |
+| Refund sandbox | Lisensi jadi `refunded`, activate → `403 license_refunded`, validate → `valid:false`. |
+| **CORS** endpoint lisensi | **Aman.** Preflight memantulkan origin apa pun (termasuk `null` dari file://), izinkan `Content-Type`. Tidak perlu proxy/Worker. |
+| Lisensi uji di build produksi | Mimin menolak `license.livemode === false` kecuali `terimaLisensiUji: true`, lalu melepas slot yang terlanjur terpakai. |
+| Webhook `order.paid` | **Belum diuji end-to-end.** URL webhook toko sandbox sudah mengarah ke `bisapakeai.com/wp-json/bpai/v1/notify/revo`; tidak diubah supaya secret yang dipakai server itu tidak berganti. Fungsi `verifyRevoSignature` lolos uji lokal (sah, body diubah, timestamp lama). |
+
+Catatan: error format `{code, message, data.status}`; validate selalu 200 dengan `valid` + `reason`. Batas endpoint lisensi publik 60 request/menit per IP.
