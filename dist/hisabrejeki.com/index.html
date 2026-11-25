@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hisab Rejeki: Catatan Keuangan Keluarga & Kalkulator Zakat</title>
+<meta name="description" content="Catat pemasukan dan pengeluaran keluarga, atur anggaran, kejar target tabungan, dan hitung zakat penghasilan, maal, serta fitrah. Data tersimpan di perangkatmu sendiri.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Nunito+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5EF; --kartu:#FFFFFF; --teks:#1D2A2A; --redup:#5E6B69; --garis:#E3DED2;
+  --utama:#0F6B66; --utama-tua:#0B5450; --emas:#B8862B; --aksen:#E6F1EF; --merah:#B23A2E; --hijau:#2E7D4F;
+  --bayang:0 10px 30px rgba(30,40,30,.07);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#101716; --kartu:#172120; --teks:#EAF1EF; --redup:#A6B4B1; --garis:#273433; --aksen:#1B3331; --utama:#2FA79F; --utama-tua:#25877F; --emas:#D9AA4E; --merah:#E06C5E; --hijau:#5DBB82; --bayang:0 10px 30px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{ --bg:#101716; --kartu:#172120; --teks:#EAF1EF; --redup:#A6B4B1; --garis:#273433; --aksen:#1B3331; --utama:#2FA79F; --utama-tua:#25877F; --emas:#D9AA4E; --merah:#E06C5E; --hijau:#5DBB82; --bayang:0 10px 30px rgba(0,0,0,.35); }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--teks);font:16px/1.6 "Nunito Sans",system-ui,sans-serif}
+a{color:var(--utama)}
+h1,h2,h3{font-family:Lora,Georgia,serif}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 20px;font:800 15px "Nunito Sans",sans-serif;cursor:pointer;text-decoration:none}
+.btn.utama{background:var(--utama);color:#fff}.btn.utama:hover{background:var(--utama-tua)}
+.btn.garis{background:transparent;color:var(--teks);border:2px solid var(--garis)}
+.btn.kecil{padding:8px 14px;font-size:14px}
+.btn.mini{padding:4px 10px;font-size:13px;border-radius:8px}
+header.atas{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--garis)}
+header.atas .wrap{display:flex;align-items:center;gap:16px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font:700 19px Lora,serif;color:var(--teks);text-decoration:none}
+.logo i{font-style:normal;width:36px;height:36px;border-radius:50%;background:var(--utama);color:#F4E3B5;display:grid;place-items:center;font-size:18px}
+nav.menu{margin-left:auto;display:flex;gap:18px;align-items:center}
+nav.menu a{color:var(--redup);text-decoration:none;font-weight:600}
+@media (max-width:720px){ nav.menu a.opsional{display:none} }
+.hero{padding:52px 0 24px;text-align:center;max-width:760px;margin:0 auto}
+.hero h1{font-size:clamp(30px,5vw,46px);line-height:1.2;margin:0 0 14px}
+.hero h1 span{color:var(--utama)}
+.hero p.lead{font-size:18px;color:var(--redup);margin:0 0 24px}
+.hero .aksi{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+section{padding:36px 0}
+h2{font-size:clamp(24px,3.5vw,32px);margin:0 0 8px}
+p.sub{color:var(--redup);margin:0 0 20px}
+.panel{background:var(--kartu);border:1px solid var(--garis);border-radius:18px;padding:18px;box-shadow:var(--bayang)}
+.tab{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tab button{border:2px solid var(--garis);background:transparent;color:var(--teks);border-radius:999px;padding:6px 14px;font:700 14px "Nunito Sans",sans-serif;cursor:pointer}
+.tab button[aria-selected="true"]{background:var(--utama);border-color:var(--utama);color:#fff}
+label.f{display:block;margin-bottom:12px;font-size:14px;font-weight:600}
+label.f span{display:block;margin-bottom:4px}
+label.f small{display:block;font-weight:400;color:var(--redup)}
+label.f input,label.f select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--garis);background:var(--bg);color:var(--teks);font:15px "Nunito Sans",sans-serif}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){ .grid2,.grid3{grid-template-columns:1fr} }
+.angka{font-variant-numeric:tabular-nums}
+.ringkas{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+@media (max-width:640px){ .ringkas{grid-template-columns:1fr} }
+.ringkas div{background:var(--aksen);border-radius:14px;padding:12px 14px}
+.ringkas small{display:block;color:var(--redup);font-size:13px}
+.ringkas b{font-size:20px}
+.masuk{color:var(--hijau)} .keluar{color:var(--merah)}
+table.trx{width:100%;border-collapse:collapse;font-size:14px}
+table.trx th{text-align:left;color:var(--redup);font-weight:600;border-bottom:1px solid var(--garis);padding:6px}
+table.trx td{border-bottom:1px solid var(--garis);padding:8px 6px;vertical-align:top}
+table.trx td.r{text-align:right;white-space:nowrap}
+.gulir{overflow-x:auto}
+.bar{height:10px;border-radius:999px;background:var(--garis);overflow:hidden;margin-top:4px}
+.bar i{display:block;height:100%;background:var(--utama);border-radius:999px}
+.bar i.lewat{background:var(--merah)}
+.pos{padding:10px 0;border-bottom:1px solid var(--garis)}
+.pos .atas{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.hasil-zakat{background:linear-gradient(135deg,var(--utama),#14514D);color:#fff;border-radius:16px;padding:18px;margin-top:8px}
+.hasil-zakat small{opacity:.85}
+.hasil-zakat b{display:block;font:700 30px Lora,serif;margin:2px 0}
+.hasil-zakat p{margin:6px 0 0;font-size:14px;opacity:.92}
+.pita{background:#FFF4D6;color:#5A4300;border-radius:12px;padding:10px 14px;font-size:14px;margin-bottom:12px}
+.pita a{color:#5A4300;font-weight:800}
+.catatan{font-size:13px;color:var(--redup)}
+.fitur{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.fitur div{background:var(--kartu);border:1px solid var(--garis);border-radius:16px;padding:16px}
+.fitur span{font-size:26px}.fitur b{display:block;margin:6px 0 2px}.fitur p{margin:0;color:var(--redup);font-size:14px}
+.harga{background:var(--kartu);border:2px solid var(--emas);border-radius:22px;padding:28px;max-width:520px;margin:0 auto;text-align:center;box-shadow:var(--bayang)}
+.harga .nominal{font:700 44px Lora,serif;margin:6px 0}
+.harga ul{text-align:left;margin:16px auto;max-width:380px;padding-left:20px;color:var(--redup)}
+details{background:var(--kartu);border:1px solid var(--garis);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+details summary{font-weight:800;cursor:pointer}
+details p{margin:8px 0 0;color:var(--redup)}
+footer.bawah{border-top:1px solid var(--garis);padding:24px 0 40px;color:var(--redup);font-size:14px}
+footer.bawah .wrap{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+.layar{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;z-index:50;padding:16px}
+.modal{background:var(--kartu);border-radius:20px;padding:24px;max-width:420px;width:100%}
+.modal h3{margin:0 0 6px}
+.pesan{border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:10px}
+.pesan.bad{background:#FDE2DC;color:#8A2410}.pesan.ok{background:#DDF3E8;color:#185C42}
+.aksi-gen{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);background:#1D2A2A;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;transition:transform .25s;z-index:60}
+.toast.tampil{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header class="atas">
+  <div class="wrap">
+    <a class="logo" href="#"><i aria-hidden="true">☪</i>Hisab Rejeki</a>
+    <nav class="menu">
+      <a class="opsional" href="#zakat">Kalkulator zakat</a>
+      <a class="opsional" href="#buku">Buku rejeki</a>
+      <a class="opsional" href="#harga">Harga</a>
+      <button class="btn garis kecil" id="buka-lisensi" type="button">Aktifkan lisensi</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <h1>Tahu ke mana <span>rejeki keluarga</span> mengalir, tahu berapa <span>zakat</span>-nya.</h1>
+    <p class="lead">Catat pemasukan dan pengeluaran dalam hitungan detik, atur anggaran tiap pos, kejar target tabungan, dan hitung zakat dengan benar. Semua data tersimpan di HP-mu sendiri.</p>
+    <div class="aksi">
+      <a class="btn utama" href="#zakat">Hitung zakat (gratis)</a>
+      <a class="btn garis" href="#buku">Coba buku rejeki</a>
+    </div>
+  </div>
+
+  <section id="zakat">
+    <div class="wrap">
+      <h2>Kalkulator zakat</h2>
+      <p class="sub">Gratis. Isi harga emas hari ini supaya nisabnya tepat. Hasil ini perkiraan; untuk kasus khusus, tanyakan ke amil atau ustadz yang kamu percaya.</p>
+      <div class="panel">
+        <div class="tab" role="tablist" id="tab-zakat">
+          <button role="tab" data-z="penghasilan" aria-selected="true">Penghasilan</button>
+          <button role="tab" data-z="maal" aria-selected="false">Maal (harta simpanan)</button>
+          <button role="tab" data-z="fitrah" aria-selected="false">Fitrah</button>
+        </div>
+        <label class="f" id="blok-emas"><span>Harga emas per gram (Rp)</span><input class="uang" id="z-emas" inputmode="numeric" value="1.500.000"><small>Cek harga emas murni (24 karat) hari ini. Nisab = 85 gram emas.</small></label>
+        <div data-zp="penghasilan">
+          <div class="grid2">
+            <label class="f"><span>Penghasilan per bulan (gaji, honor, usaha)</span><input class="uang" id="z-gaji" inputmode="numeric" value="12.000.000"></label>
+            <label class="f"><span>Penghasilan lain per bulan (opsional)</span><input class="uang" id="z-lain" inputmode="numeric" value="0"></label>
+          </div>
+        </div>
+        <div data-zp="maal" class="hidden">
+          <div class="grid3">
+            <label class="f"><span>Uang tunai & tabungan</span><input class="uang" id="z-tabungan" inputmode="numeric" value="60.000.000"></label>
+            <label class="f"><span>Emas/perak simpanan (nilai Rp)</span><input class="uang" id="z-logam" inputmode="numeric" value="0"></label>
+            <label class="f"><span>Saham, reksa dana, deposito</span><input class="uang" id="z-investasi" inputmode="numeric" value="40.000.000"></label>
+            <label class="f"><span>Piutang yang lancar</span><input class="uang" id="z-piutang" inputmode="numeric" value="0"></label>
+            <label class="f"><span>Utang jatuh tempo (pengurang)</span><input class="uang" id="z-utang" inputmode="numeric" value="5.000.000"></label>
+            <label class="f"><span>Sudah dimiliki 1 tahun (haul)?</span><select id="z-haul"><option value="ya">Ya</option><option value="tidak">Belum</option></select></label>
+          </div>
+        </div>
+        <div data-zp="fitrah" class="hidden">
+          <div class="grid2">
+            <label class="f"><span>Jumlah jiwa dalam tanggungan</span><input id="z-jiwa" type="number" min="1" value="4"></label>
+            <label class="f"><span>Nilai fitrah per jiwa (Rp)</span><input class="uang" id="z-fitrah" inputmode="numeric" value="50.000"><small>Setara 2,5 kg / 3,5 liter beras yang biasa dimakan. Ikuti ketetapan BAZNAS atau masjid di daerahmu.</small></label>
+          </div>
+        </div>
+        <div class="hasil-zakat" id="hasil-zakat" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="buku">
+    <div class="wrap">
+      <h2>Buku Rejeki</h2>
+      <p class="sub">Catatan keuangan keluarga. Versi gratis bisa menyimpan 20 transaksi; lisensi membuka transaksi tanpa batas, anggaran, dan target tabungan.</p>
+      <div class="pita" id="pita-gratis">Mode gratis: <b id="sisa-gratis">20</b> transaksi tersisa. <a href="#harga">Buka semua fitur</a></div>
+      <div class="panel">
+        <div class="aksi-gen" style="justify-content:space-between;margin-bottom:12px">
+          <div class="tab" role="tablist" id="tab-buku" style="margin:0">
+            <button role="tab" data-b="catat" aria-selected="true">Catatan</button>
+            <button role="tab" data-b="anggaran" aria-selected="false">Anggaran 🔒</button>
+            <button role="tab" data-b="tujuan" aria-selected="false">Tabungan 🔒</button>
+          </div>
+          <label class="f" style="margin:0;min-width:150px"><input type="month" id="bulan" aria-label="Bulan"></label>
+        </div>
+
+        <div data-bp="catat">
+          <div class="ringkas angka">
+            <div><small>Pemasukan</small><b class="masuk" id="r-masuk">Rp0</b></div>
+            <div><small>Pengeluaran</small><b class="keluar" id="r-keluar">Rp0</b></div>
+            <div><small>Sisa bulan ini</small><b id="r-sisa">Rp0</b></div>
+          </div>
+          <form id="form-trx" class="grid3" autocomplete="off">
+            <label class="f"><span>Jenis</span><select id="t-jenis"><option value="keluar">Pengeluaran</option><option value="masuk">Pemasukan</option></select></label>
+            <label class="f"><span>Nominal</span><input class="uang" id="t-nominal" inputmode="numeric" placeholder="0" required></label>
+            <label class="f"><span>Kategori</span><select id="t-kategori"></select></label>
+            <label class="f"><span>Tanggal</span><input type="date" id="t-tanggal" required></label>
+            <label class="f" style="grid-column:span 2"><span>Catatan (opsional)</span><input id="t-catatan" maxlength="80" placeholder="mis. belanja pasar"></label>
+            <div class="aksi-gen"><button class="btn utama" type="submit">Simpan</button></div>
+          </form>
+          <div class="gulir"><table class="trx angka"><thead><tr><th>Tanggal</th><th>Kategori</th><th>Catatan</th><th style="text-align:right">Nominal</th><th></th></tr></thead><tbody id="daftar-trx"></tbody></table></div>
+          <h3 style="font-size:18px;margin:20px 0 6px">Pengeluaran per kategori</h3>
+          <div id="per-kategori"></div>
+        </div>
+
+        <div data-bp="anggaran" class="hidden">
+          <p class="catatan">Isi batas belanja per kategori untuk bulan ini. Batang berubah merah kalau sudah lewat.</p>
+          <div id="daftar-anggaran"></div>
+        </div>
+
+        <div data-bp="tujuan" class="hidden">
+          <form id="form-tujuan" class="grid3" autocomplete="off">
+            <label class="f"><span>Nama target</span><input id="g-nama" maxlength="40" placeholder="mis. Dana umrah" required></label>
+            <label class="f"><span>Target (Rp)</span><input class="uang" id="g-target" inputmode="numeric" required></label>
+            <label class="f"><span>Tercapai pada</span><input type="month" id="g-batas" required></label>
+            <div class="aksi-gen"><button class="btn utama" type="submit">Tambah target</button></div>
+          </form>
+          <div id="daftar-tujuan"></div>
+        </div>
+
+        <div class="aksi-gen" style="margin-top:18px;border-top:1px solid var(--garis);padding-top:14px">
+          <button class="btn garis mini" id="ekspor-csv" type="button">⬇ Ekspor CSV</button>
+          <button class="btn garis mini" id="cadangkan" type="button">💾 Cadangkan data</button>
+          <label class="btn garis mini" style="cursor:pointer">📂 Pulihkan<input type="file" id="pulihkan" accept="application/json" hidden></label>
+          <span class="catatan">Data hanya ada di browser ini. Cadangkan rutin, terutama sebelum ganti HP atau hapus data browser.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="fitur">
+        <div><span>📒</span><b>Catat dalam 5 detik</b><p>Nominal, kategori, selesai. Ringkasan bulanan langsung terlihat.</p></div>
+        <div><span>🎯</span><b>Anggaran per pos</b><p>Batas belanja dapur, transport, jajan, dan lainnya dengan peringatan merah.</p></div>
+        <div><span>🕋</span><b>Target tabungan</b><p>Umrah, sekolah anak, dana darurat: tahu harus menabung berapa per bulan.</p></div>
+        <div><span>🔒</span><b>Data milikmu</b><p>Tanpa akun, tanpa server. Semua tersimpan di perangkatmu dan bisa dicadangkan.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="harga">
+    <div class="wrap">
+      <div class="harga">
+        <h2>Sekali bayar, berkah seterusnya</h2>
+        <div class="nominal" id="teks-harga">Rp29.000</div>
+        <ul>
+          <li>Transaksi tanpa batas</li>
+          <li>Anggaran per kategori & target tabungan</li>
+          <li>Ekspor CSV untuk Excel / Google Sheets</li>
+          <li>Aktif di <b id="teks-perangkat">3</b> perangkat (data tiap perangkat terpisah, pindahkan lewat cadangan)</li>
+        </ul>
+        <a class="btn utama" id="link-beli" href="#" target="_blank" rel="noopener">Beli lewat Revo</a>
+        <p class="catatan">Bayar dengan QRIS atau Virtual Account. Kode lisensi dikirim ke email setelah pembayaran berhasil.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap" style="max-width:760px">
+      <h2>Pertanyaan yang sering ditanyakan</h2>
+      <details><summary>Dasar perhitungan zakatnya apa?</summary><p>Zakat penghasilan dan maal memakai nisab 85 gram emas dan kadar 2,5%, mengikuti pedoman yang umum dipakai BAZNAS. Untuk zakat penghasilan, nisab bulanan = 85 gram × harga emas ÷ 12, dihitung dari penghasilan kotor. Ada pendapat ulama lain (misalnya dihitung dari penghasilan bersih); kalau ragu, ikuti lembaga amil zakat tempatmu.</p></details>
+      <details><summary>Apakah data keuangan saya dikirim ke server?</summary><p>Tidak. Catatan disimpan di browser perangkatmu (localStorage). Yang dikirim ke Revo hanya kode lisensi saat aktivasi.</p></details>
+      <details><summary>Bagaimana kalau ganti HP?</summary><p>Tekan "Cadangkan data" di HP lama, kirim filenya ke HP baru, lalu tekan "Pulihkan". Jangan lupa "Lepas lisensi" di HP lama supaya slot perangkatnya kosong.</p></details>
+      <details><summary>Bagaimana kalau ada masalah atau ingin refund?</summary><p>Hubungi penjual lewat halaman toko di Revo (tautan di bawah). Pembayaran dan refund diproses oleh Revo.id.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="bawah">
+  <div class="wrap">
+    <span>© <span class="tahun"></span> <span id="nama-penjual"></span> · hisabrejeki.com</span>
+    <span class="catatan" id="status-lis"></span>
+    <span><a id="link-toko" href="#" target="_blank" rel="noopener">Kontak penjual (Revo)</a> · Pembayaran diproses oleh Revo.id</span>
+  </div>
+</footer>
+
+<div class="layar hidden" id="layar-lisensi" role="dialog" aria-modal="true" aria-labelledby="judul-lisensi">
+  <div class="modal">
+    <h3 id="judul-lisensi">Aktifkan lisensi</h3>
+    <p class="catatan" style="margin-top:0">Masukkan email pembelian dan kode lisensi dari email setelah pembayaran berhasil.</p>
+    <form id="form-lisensi" novalidate>
+      <label class="f"><span>Email pembelian</span><input type="email" id="lis-email" autocomplete="email" placeholder="nama@email.com"></label>
+      <label class="f"><span>Kode lisensi</span><input id="lis-kode" autocomplete="off" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX"></label>
+      <div class="pesan hidden" id="lis-pesan" role="status"></div>
+      <div class="aksi-gen">
+        <button class="btn utama" id="lis-tombol" type="submit">Aktifkan</button>
+        <button class="btn garis" id="lis-tutup" type="button">Tutup</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== Pengaturan situs: diisi otomatis oleh tools/revo-sync.mjs ===== */
+const SITUS = {
+  revoProductId: '',
+  linkBeli: '',
+  linkToko: 'https://revo.id',
+  harga: 29000,
+  batasPerangkat: 3,
+  penjual: 'CV. Mewlanet Kreator Digital',
+  terimaLisensiUji: false,
+  batasGratis: 20
+};
+</script>
+<script>
+/* =====================================================================
+   Lisensi Revo.id untuk aplikasi HTML statis (dipakai bersama semua situs).
+   Disisipkan ke index.html oleh tools/build.mjs. Tanpa API key: kredensialnya
+   kode lisensi itu sendiri. Endpoint lisensi Revo mengizinkan CORS dari origin mana pun.
+   ===================================================================== */
+function buatLisensiRevo(opsi){
+  const o = Object.assign({ api:'https://revo.id/api/v1', productId:'', terimaLisensiUji:false,
+    kunci:'revo.lisensi', cekUlangJam:24, masaTenggangHari:7 }, opsi);
+  const PESAN = {
+    license_not_found:'Kode lisensi tidak ditemukan.',
+    instance_not_activated:'Lisensi belum diaktifkan di perangkat ini.',
+    license_expired:'Lisensi sudah kedaluwarsa.',
+    license_disabled:'Lisensi dinonaktifkan oleh penjual.',
+    license_refunded:'Lisensi tidak berlaku karena pembelian sudah di-refund.',
+    product_mismatch:'Kode lisensi ini untuk produk lain.',
+    activation_limit:'Batas perangkat untuk lisensi ini sudah habis. Lepas lisensi di perangkat lama dulu.',
+    rate_limited:'Terlalu banyak percobaan. Coba lagi 1 menit lagi.',
+    test_license:'Ini kode lisensi uji (sandbox), tidak berlaku di versi ini.'
+  };
+  const baca = (k, d) => { try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } };
+  const tulis = (k, v) => { try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+  const hapus = k => { try{ localStorage.removeItem(k); }catch(e){} };
+  function perangkat(){
+    let id = baca(o.kunci + '.perangkat', null);
+    if(!id){ id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2); tulis(o.kunci + '.perangkat', id); }
+    return id;
+  }
+  async function panggil(aksi, body){
+    const c = new AbortController(); const t = setTimeout(() => c.abort(), 15000);
+    try{
+      const res = await fetch(o.api.replace(/\/$/, '') + '/licenses/' + aksi, { method:'POST', signal:c.signal,
+        headers:{ 'Content-Type':'application/json', 'Accept':'application/json' }, body: JSON.stringify(body) });
+      let j = {}; try{ j = await res.json() || {}; }catch(e){}
+      return { res, j };
+    } finally { clearTimeout(t); }
+  }
+  const dasar = kode => ({ license_key: kode, product_id: Number(o.productId), instance: perangkat() });
+  function hasil(res, j, ok){
+    const lic = j.license || (j.data && j.data.license) || {};
+    if(ok && lic.livemode === false && !o.terimaLisensiUji) return { valid:false, kode:'test_license', pesan:PESAN.test_license };
+    if(ok) return { valid:true, kedaluwarsa: lic.expires_at || null };
+    const kode = j.reason || j.code || '';
+    return { valid:false, kode, jaringan: res.status >= 500 || res.status === 429, pesan: PESAN[kode] || j.message || ('Server lisensi membalas ' + res.status + '.') };
+  }
+  async function cek(kode, aktifkan){
+    if(!o.productId) return { valid:false, pesan:'ID produk Revo belum diisi.' };
+    try{
+      if(!aktifkan){
+        const { res, j } = await panggil('validate', dasar(kode));
+        if(res.ok && j.valid === true) return hasil(res, j, true);
+        if(!(res.ok && j.reason === 'instance_not_activated')) return hasil(res, j, false);
+      }
+      const { res, j } = await panggil('activate', { ...dasar(kode), label: (location.hostname || 'lokal') + ' · ' + (navigator.platform || 'perangkat') });
+      const r = hasil(res, j, res.ok && j.activated !== false);
+      if(r.kode === 'test_license') panggil('deactivate', dasar(kode)).catch(() => {});
+      return r;
+    }catch(e){ return { valid:false, jaringan:true, pesan:'Server lisensi tidak terjangkau. Cek koneksi internetmu.' }; }
+  }
+  const berlaku = l => !l.kedaluwarsa || isNaN(Date.parse(l.kedaluwarsa)) || Date.parse(l.kedaluwarsa) > Date.now();
+  return {
+    /** Lisensi tersimpan yang masih sah, atau null. Cek ulang ke Revo bila sudah lewat cekUlangJam. */
+    async status(){
+      const l = baca(o.kunci, null);
+      if(!l || !l.kode) return { aktif:false };
+      const umurJam = (Date.now() - (l.dicek || 0)) / 36e5;
+      if(umurJam < o.cekUlangJam && berlaku(l)) return { aktif:true, lisensi:l };
+      const r = await cek(l.kode, false);
+      if(r.valid){ Object.assign(l, { dicek: Date.now(), kedaluwarsa: r.kedaluwarsa }); tulis(o.kunci, l); return { aktif:true, lisensi:l }; }
+      if(r.jaringan && umurJam < o.masaTenggangHari * 24 && berlaku(l)) return { aktif:true, lisensi:l, peringatan:'Lagi offline. Lisensi dicek ulang saat online.' };
+      hapus(o.kunci);
+      return { aktif:false, pesan:r.pesan };
+    },
+    async aktifkan(email, kode){
+      kode = String(kode || '').trim();
+      if(kode.length < 6) return { valid:false, pesan:'Kode lisensi belum lengkap.' };
+      const r = await cek(kode, true);
+      if(r.valid) tulis(o.kunci, { kode, email: String(email || '').trim(), kedaluwarsa: r.kedaluwarsa, dicek: Date.now() });
+      return r;
+    },
+    async lepas(){
+      const l = baca(o.kunci, null);
+      hapus(o.kunci);
+      if(l && l.kode && o.productId) await panggil('deactivate', dasar(l.kode)).catch(() => {});
+    }
+  };
+}
+
+</script>
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rp = n => (n < 0 ? '−Rp' : 'Rp') + Math.round(Math.abs(n)).toLocaleString('id-ID');
+const angka = s => Number(String(s ?? '').replace(/[^\d]/g, '')) || 0;
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('tampil'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('tampil'), 2200); }
+document.querySelectorAll('.tahun').forEach(el => el.textContent = new Date().getFullYear());
+$('#nama-penjual').textContent = SITUS.penjual;
+$('#teks-harga').textContent = rp(SITUS.harga);
+$('#teks-perangkat').textContent = SITUS.batasPerangkat;
+$('#link-beli').href = SITUS.linkBeli || SITUS.linkToko;
+$('#link-toko').href = SITUS.linkToko;
+// Input uang: tampil dengan titik ribuan.
+document.addEventListener('input', e => { if(!e.target.classList.contains('uang')) return; const n = angka(e.target.value); e.target.value = n ? n.toLocaleString('id-ID') : ''; });
+
+/* ===== ZAKAT ===== */
+const NISAB_GRAM = 85, KADAR = 0.025;
+let jenisZakat = 'penghasilan';
+function hitungZakat(){
+  const emas = angka($('#z-emas').value), nisabTahun = NISAB_GRAM * emas;
+  let html = '';
+  if(jenisZakat === 'penghasilan'){
+    const bulan = angka($('#z-gaji').value) + angka($('#z-lain').value), nisabBulan = nisabTahun / 12;
+    const wajib = emas > 0 && bulan >= nisabBulan;
+    html = `<small>Zakat penghasilan per bulan</small><b>${wajib ? rp(bulan * KADAR) : 'Belum wajib'}</b>
+      <p>Penghasilan ${rp(bulan)} ${wajib ? '≥' : '<'} nisab bulanan ${rp(nisabBulan)} (85 g emas ÷ 12). ${wajib ? `Setahun: ${rp(bulan * KADAR * 12)}.` : 'Tetap dianjurkan bersedekah/infak.'}</p>`;
+  } else if(jenisZakat === 'maal'){
+    const harta = ['#z-tabungan', '#z-logam', '#z-investasi', '#z-piutang'].reduce((a, s) => a + angka($(s).value), 0) - angka($('#z-utang').value);
+    const haul = $('#z-haul').value === 'ya', wajib = emas > 0 && haul && harta >= nisabTahun;
+    html = `<small>Zakat maal</small><b>${wajib ? rp(harta * KADAR) : 'Belum wajib'}</b>
+      <p>Harta bersih ${rp(harta)} ${harta >= nisabTahun ? '≥' : '<'} nisab ${rp(nisabTahun)} (85 g emas)${haul ? '' : ', dan belum genap 1 tahun (haul)'}. Rumah tinggal, kendaraan pribadi, dan perabot tidak dihitung.</p>`;
+  } else {
+    const jiwa = Math.max(1, Number($('#z-jiwa').value) || 1), per = angka($('#z-fitrah').value);
+    html = `<small>Zakat fitrah</small><b>${rp(jiwa * per)}</b><p>${jiwa} jiwa × ${rp(per)}. Dibayarkan sebelum salat Idulfitri, bisa dalam bentuk beras 2,5 kg per jiwa.</p>`;
+  }
+  $('#hasil-zakat').innerHTML = html;
+}
+$('#tab-zakat').addEventListener('click', e => { const b = e.target.closest('[data-z]'); if(!b) return; jenisZakat = b.dataset.z;
+  $$('#tab-zakat [data-z]').forEach(x => x.setAttribute('aria-selected', x === b)); $$('[data-zp]').forEach(p => p.classList.toggle('hidden', p.dataset.zp !== jenisZakat));
+  $('#blok-emas').classList.toggle('hidden', jenisZakat === 'fitrah'); hitungZakat(); });
+$('#zakat').addEventListener('input', hitungZakat); $('#zakat').addEventListener('change', hitungZakat);
+
+/* ===== BUKU REJEKI ===== */
+const KATEGORI = { keluar:['Dapur & makan','Listrik, air, internet','Transportasi','Pendidikan','Kesehatan','Cicilan','Zakat, infak, sedekah','Rumah tangga','Pakaian','Hiburan','Hadiah & kondangan','Lain-lain'],
+                   masuk:['Gaji','Usaha','Bonus/THR','Hadiah','Lain-lain'] };
+const KUNCI = 'hsr.data';
+const baca = () => { try{ return Object.assign({ trx:[], anggaran:{}, tujuan:[] }, JSON.parse(localStorage.getItem(KUNCI)) || {}); }catch(e){ return { trx:[], anggaran:{}, tujuan:[] }; } };
+let data = baca();
+const simpan = () => { try{ localStorage.setItem(KUNCI, JSON.stringify(data)); }catch(e){ toast('Gagal menyimpan: memori browser penuh?'); } };
+let berlisensi = false, tabBuku = 'catat';
+const hariIni = () => new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+$('#bulan').value = hariIni().slice(0, 7); $('#t-tanggal').value = hariIni();
+function isiKategori(){ $('#t-kategori').innerHTML = KATEGORI[$('#t-jenis').value].map(k => `<option>${esc(k)}</option>`).join(''); }
+$('#t-jenis').addEventListener('change', isiKategori);
+
+function trxBulan(){ const b = $('#bulan').value; return data.trx.filter(t => t.tanggal.startsWith(b)).sort((a, z) => z.tanggal.localeCompare(a.tanggal) || z.id - a.id); }
+function renderCatat(){
+  const list = trxBulan();
+  const masuk = list.filter(t => t.jenis === 'masuk').reduce((a, t) => a + t.nominal, 0), keluar = list.filter(t => t.jenis === 'keluar').reduce((a, t) => a + t.nominal, 0);
+  $('#r-masuk').textContent = rp(masuk); $('#r-keluar').textContent = rp(keluar); $('#r-sisa').textContent = rp(masuk - keluar);
+  $('#r-sisa').className = masuk - keluar < 0 ? 'keluar' : '';
+  $('#daftar-trx').innerHTML = list.length ? list.map(t => `<tr><td>${t.tanggal.slice(8)}/${t.tanggal.slice(5, 7)}</td><td>${esc(t.kategori)}</td><td>${esc(t.catatan)}</td><td class="r ${t.jenis}">${t.jenis === 'keluar' ? '−' : '+'}${rp(t.nominal)}</td><td><button class="btn garis mini" data-hapus="${t.id}" type="button" aria-label="Hapus">✕</button></td></tr>`).join('')
+    : '<tr><td colspan="5" class="catatan">Belum ada catatan di bulan ini.</td></tr>';
+  const per = {}; list.filter(t => t.jenis === 'keluar').forEach(t => per[t.kategori] = (per[t.kategori] || 0) + t.nominal);
+  const urut = Object.entries(per).sort((a, b) => b[1] - a[1]);
+  $('#per-kategori').innerHTML = urut.length ? urut.map(([k, v]) => `<div class="pos"><div class="atas"><span>${esc(k)}</span><span class="angka">${rp(v)} · ${Math.round(v / keluar * 100)}%</span></div><div class="bar"><i style="width:${v / urut[0][1] * 100}%"></i></div></div>`).join('') : '<p class="catatan">Belum ada pengeluaran.</p>';
+  const sisa = Math.max(0, SITUS.batasGratis - data.trx.length);
+  $('#sisa-gratis').textContent = sisa;
+}
+function renderAnggaran(){
+  const b = $('#bulan').value, a = data.anggaran[b] || {}, list = trxBulan();
+  $('#daftar-anggaran').innerHTML = KATEGORI.keluar.map(k => {
+    const pakai = list.filter(t => t.jenis === 'keluar' && t.kategori === k).reduce((s, t) => s + t.nominal, 0), batas = a[k] || 0, pct = batas ? pakai / batas * 100 : 0;
+    return `<div class="pos"><div class="atas"><span>${esc(k)}</span><span class="angka ${pct > 100 ? 'keluar' : ''}">${rp(pakai)} / <input class="uang" data-ang="${esc(k)}" value="${batas ? batas.toLocaleString('id-ID') : ''}" placeholder="batas" inputmode="numeric" style="width:120px;padding:4px 8px;border-radius:8px;border:1px solid var(--garis);background:var(--bg);color:var(--teks)"></span></div>
+      ${batas ? `<div class="bar"><i class="${pct > 100 ? 'lewat' : ''}" style="width:${Math.min(100, pct)}%"></i></div><small class="catatan">${pct > 100 ? 'Lewat ' + rp(pakai - batas) : 'Sisa ' + rp(batas - pakai)}</small>` : ''}</div>`;
+  }).join('');
+}
+function renderTujuan(){
+  const now = new Date();
+  $('#daftar-tujuan').innerHTML = data.tujuan.length ? data.tujuan.map(g => {
+    const [y, m] = g.batas.split('-').map(Number), bulanLagi = Math.max(1, (y - now.getFullYear()) * 12 + (m - 1 - now.getMonth()));
+    const kurang = Math.max(0, g.target - g.terkumpul), pct = Math.min(100, g.terkumpul / g.target * 100);
+    return `<div class="pos"><div class="atas"><b>${esc(g.nama)}</b><span class="angka">${rp(g.terkumpul)} / ${rp(g.target)}</span></div><div class="bar"><i style="width:${pct}%"></i></div>
+      <div class="aksi-gen" style="margin-top:6px"><small class="catatan">${kurang ? `Perlu ${rp(Math.ceil(kurang / bulanLagi))}/bulan selama ${bulanLagi} bulan` : 'Tercapai, alhamdulillah! 🎉'}</small>
+      <input class="uang" data-setor="${g.id}" placeholder="setor Rp" inputmode="numeric" style="width:120px;padding:4px 8px;border-radius:8px;border:1px solid var(--garis);background:var(--bg);color:var(--teks)">
+      <button class="btn garis mini" data-tambah="${g.id}" type="button">+ Setor</button><button class="btn garis mini" data-hapus-g="${g.id}" type="button">Hapus</button></div></div>`;
+  }).join('') : '<p class="catatan">Belum ada target. Contoh: Dana umrah Rp35.000.000 tercapai Desember 2028.</p>';
+}
+function render(){ renderCatat(); if(tabBuku === 'anggaran') renderAnggaran(); if(tabBuku === 'tujuan') renderTujuan(); }
+$('#bulan').addEventListener('change', render);
+$('#tab-buku').addEventListener('click', e => { const b = e.target.closest('[data-b]'); if(!b) return;
+  if(b.dataset.b !== 'catat' && !berlisensi){ toast('Fitur ini terbuka setelah lisensi aktif'); location.hash = '#harga'; return; }
+  tabBuku = b.dataset.b; $$('#tab-buku [data-b]').forEach(x => x.setAttribute('aria-selected', x === b)); $$('[data-bp]').forEach(p => p.classList.toggle('hidden', p.dataset.bp !== tabBuku)); render(); });
+$('#form-trx').addEventListener('submit', e => {
+  e.preventDefault();
+  if(!berlisensi && data.trx.length >= SITUS.batasGratis){ toast('Batas versi gratis tercapai. Aktifkan lisensi untuk lanjut.'); location.hash = '#harga'; return; }
+  const nominal = angka($('#t-nominal').value); if(!nominal){ toast('Nominal belum diisi'); return; }
+  data.trx.push({ id: Date.now(), jenis: $('#t-jenis').value, nominal, kategori: $('#t-kategori').value, tanggal: $('#t-tanggal').value, catatan: $('#t-catatan').value.trim() });
+  simpan(); $('#t-nominal').value = ''; $('#t-catatan').value = '';
+  if(!$('#t-tanggal').value.startsWith($('#bulan').value)) $('#bulan').value = $('#t-tanggal').value.slice(0, 7);
+  render(); toast('Tersimpan');
+});
+$('#daftar-trx').addEventListener('click', e => { const b = e.target.closest('[data-hapus]'); if(!b || !confirm('Hapus catatan ini?')) return; data.trx = data.trx.filter(t => t.id !== Number(b.dataset.hapus)); simpan(); render(); });
+$('#daftar-anggaran').addEventListener('change', e => { const k = e.target.dataset.ang; if(!k) return; const b = $('#bulan').value; (data.anggaran[b] ||= {})[k] = angka(e.target.value); simpan(); renderAnggaran(); });
+$('#form-tujuan').addEventListener('submit', e => { e.preventDefault(); const target = angka($('#g-target').value); if(!target) return;
+  data.tujuan.push({ id: Date.now(), nama: $('#g-nama').value.trim(), target, batas: $('#g-batas').value, terkumpul: 0 }); simpan(); e.target.reset(); renderTujuan(); });
+$('#daftar-tujuan').addEventListener('click', e => {
+  const t = e.target.closest('[data-tambah]'), h = e.target.closest('[data-hapus-g]');
+  if(t){ const g = data.tujuan.find(x => x.id === Number(t.dataset.tambah)), n = angka($(`[data-setor="${g.id}"]`).value); if(!n) return; g.terkumpul += n; simpan(); renderTujuan(); toast('Setoran dicatat'); }
+  if(h && confirm('Hapus target ini?')){ data.tujuan = data.tujuan.filter(x => x.id !== Number(h.dataset.hapusG)); simpan(); renderTujuan(); }
+});
+function unduh(nama, isi, tipe){ const url = URL.createObjectURL(new Blob([isi], { type: tipe })); const a = document.createElement('a'); a.href = url; a.download = nama; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000); }
+$('#ekspor-csv').addEventListener('click', () => {
+  const q = s => '"' + String(s ?? '').replace(/"/g, '""') + '"';
+  const baris = [['Tanggal','Jenis','Kategori','Catatan','Nominal']].concat(data.trx.slice().sort((a, b) => a.tanggal.localeCompare(b.tanggal)).map(t => [t.tanggal, t.jenis === 'masuk' ? 'Pemasukan' : 'Pengeluaran', t.kategori, t.catatan, t.jenis === 'masuk' ? t.nominal : -t.nominal]));
+  unduh('hisabrejeki-transaksi.csv', '﻿' + baris.map(r => r.map(q).join(';')).join('\r\n'), 'text/csv'); });
+$('#cadangkan').addEventListener('click', () => unduh(`hisabrejeki-cadangan-${hariIni()}.json`, JSON.stringify({ versi:1, data }, null, 1), 'application/json'));
+$('#pulihkan').addEventListener('change', async e => {
+  const f = e.target.files[0]; if(!f) return;
+  try{ const j = JSON.parse(await f.text()); const d = j.data || j; if(!Array.isArray(d.trx)) throw 0;
+    if(!confirm(`Pulihkan ${d.trx.length} transaksi? Data di perangkat ini akan diganti.`)) return;
+    data = Object.assign({ trx:[], anggaran:{}, tujuan:[] }, d); simpan(); render(); toast('Data dipulihkan');
+  }catch(err){ toast('File cadangan tidak dikenali'); }
+  e.target.value = '';
+});
+
+/* ===== lisensi ===== */
+const lisensi = buatLisensiRevo({ productId: SITUS.revoProductId, terimaLisensiUji: SITUS.terimaLisensiUji, kunci:'hsr.lisensi' });
+function aturLisensi(aktif, l, peringatan){
+  berlisensi = aktif;
+  $('#pita-gratis').classList.toggle('hidden', aktif);
+  $$('#tab-buku [data-b]').forEach(b => { if(b.dataset.b !== 'catat') b.textContent = b.textContent.replace(' 🔒', '') + (aktif ? '' : ' 🔒'); });
+  $('#buka-lisensi').textContent = aktif ? 'Lisensi aktif ✓' : 'Aktifkan lisensi';
+  $('#status-lis').innerHTML = aktif ? `${esc(peringatan || '')} Lisensi: ${esc(l.email || 'aktif')} · <a href="#" id="lepas">Lepas lisensi</a>` : '';
+  if(aktif) $('#lepas').addEventListener('click', async ev => { ev.preventDefault(); if(!confirm('Lepas lisensi dari perangkat ini? Catatanmu tetap tersimpan.')) return; await lisensi.lepas(); aturLisensi(false); });
+  if(!aktif && tabBuku !== 'catat') $('#tab-buku [data-b="catat"]').click();
+  render();
+}
+function pesan(t, jenis){ const el = $('#lis-pesan'); el.textContent = t; el.className = 'pesan ' + jenis; }
+$('#buka-lisensi').addEventListener('click', () => $('#layar-lisensi').classList.remove('hidden'));
+$('#lis-tutup').addEventListener('click', () => $('#layar-lisensi').classList.add('hidden'));
+$('#layar-lisensi').addEventListener('click', e => { if(e.target.id === 'layar-lisensi') $('#layar-lisensi').classList.add('hidden'); });
+$('#form-lisensi').addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = $('#lis-email').value.trim();
+  if(!/^\S+@\S+\.\S+$/.test(email)){ pesan('Email belum benar.', 'bad'); return; }
+  const t = $('#lis-tombol'); t.disabled = true; t.textContent = 'Mengecek…';
+  const r = await lisensi.aktifkan(email, $('#lis-kode').value);
+  t.disabled = false; t.textContent = 'Aktifkan';
+  if(!r.valid){ pesan(r.pesan, 'bad'); return; }
+  pesan('Lisensi aktif. Semua fitur terbuka.', 'ok'); $('#lis-kode').value = '';
+  aturLisensi(true, { email });
+  setTimeout(() => $('#layar-lisensi').classList.add('hidden'), 900);
+});
+
+isiKategori(); hitungZakat(); render();
+lisensi.status().then(s => { if(s.aktif) aturLisensi(true, s.lisensi, s.peringatan); else if(s.pesan){ $('#layar-lisensi').classList.remove('hidden'); pesan(s.pesan, 'bad'); } });
+</script>
+</body>
+</html>

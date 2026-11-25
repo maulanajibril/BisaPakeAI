@@ -33,6 +33,17 @@
       "deskripsi": "8 template Excel siap pakai untuk usaha: buku kas harian, stok barang, invoice, gaji & slip karyawan, anggaran bulanan, catatan penjualan, hutang-piutang, dan absensi. Rumus sudah jadi, tinggal isi. Kode lisensi dikirim ke email; aktifkan di excelcepat.com untuk mengunduh file.",
       "revo_product_id": null,
       "batas_perangkat": 3
+    },
+    {
+      "slug": "hisabrejeki",
+      "folder": "situs/hisabrejeki.com",
+      "domain": "hisabrejeki.com",
+      "key_env": "REVO_KEY_HISABREJEKI",
+      "judul": "Hisab Rejeki: Catatan Keuangan Keluarga",
+      "harga": 29000,
+      "deskripsi": "Aplikasi web catatan keuangan keluarga: pemasukan/pengeluaran tanpa batas, anggaran per kategori, target tabungan (umrah, sekolah, dana darurat), ekspor CSV, dan cadangan data. Termasuk kalkulator zakat penghasilan, maal, dan fitrah. Data tersimpan di perangkat sendiri. Kode lisensi dikirim ke email; aktifkan di hisabrejeki.com.",
+      "revo_product_id": null,
+      "batas_perangkat": 3
     }
   ]
 }

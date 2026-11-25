@@ -7,6 +7,7 @@ Seri aplikasi HTML BisaPakeAI oleh **CV. Mewlanet Kreator Digital**.
 | Mimin — Social Media Management & Corporate Content Creator | mimin.bisapakeai.com | [`mimin/`](mimin/) |
 | Worksheet Anak — generator lembar kerja siap cetak | worksheetanak.net | [`situs/worksheetanak.net/`](situs/worksheetanak.net/) |
 | Excel Cepat — 8 template Excel UMKM + perakit rumus | excelcepat.com | [`situs/excelcepat.com/`](situs/excelcepat.com/) |
+| Hisab Rejeki — catatan keuangan keluarga + kalkulator zakat | hisabrejeki.com | [`situs/hisabrejeki.com/`](situs/hisabrejeki.com/) |
 
 ---
 
