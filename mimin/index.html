@@ -151,14 +151,14 @@ footer.bawah .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:spac
   <div class="kartu-gerbang">
     <div class="logo"><div class="logo-ikon" aria-hidden="true">💬</div><div>Mimin<small>Seri BisaPakeAI</small></div></div>
     <h1 id="judul-gerbang">Aktifkan lisensi Mimin</h1>
-    <p>Masukkan email dan kode lisensi yang kamu dapat setelah membeli di bisapakeai.com.</p>
+    <p>Masukkan email dan kode lisensi yang kamu dapat di email setelah pembayaran berhasil.</p>
     <form id="form-lisensi" novalidate>
       <label class="f"><span>Email pembelian</span><input type="email" id="lis-email" autocomplete="email" placeholder="nama@email.com" required></label>
       <label class="f"><span>Kode lisensi</span><input type="text" id="lis-kode" autocomplete="off" spellcheck="false" placeholder="XXXX-XXXX-XXXX-XXXX" required></label>
       <div id="lis-pesan" class="pesan hidden" role="status"></div>
       <button class="btn utama penuh" id="lis-tombol" type="submit">Aktifkan</button>
     </form>
-    <p class="kecil" style="margin:16px 0 0">Belum punya lisensi? <a id="lis-beli" href="https://bisapakeai.com" target="_blank" rel="noopener">Beli di bisapakeai.com</a></p>
+    <p class="kecil" style="margin:16px 0 0">Belum punya lisensi? <a id="lis-beli" href="https://bisapakeai.com" target="_blank" rel="noopener">Beli lisensi Mimin</a></p>
     <p class="kecil" style="margin:6px 0 0">© <span class="tahun"></span> CV. Mewlanet Kreator Digital</p>
   </div>
 </section>
@@ -191,9 +191,13 @@ footer.bawah .wrap{display:flex;flex-wrap:wrap;gap:8px 18px;justify-content:spac
    Samakan dengan seri Guru. Lihat README.md untuk format request/respons.
    ===================================================================== */
 const LISENSI = {
+  // 'revo'   = lisensi dari Revo.id (https://revo.id/developer/#lisensi). Tanpa API key di browser.
   // 'custom' = endpoint REST WordPress milik BisaPakeAI (POST JSON)
   // 'edd'    = Easy Digital Downloads Software Licensing (GET ?edd_action=...)
-  mode: 'custom',
+  mode: 'revo',
+  // Hanya untuk mode 'revo'. Isi dengan ID produk Mimin di dashboard Revo.
+  revoApi: 'https://revo.id/api/v1',
+  revoProductId: '',
   endpoint: 'https://bisapakeai.com/wp-json/bisapakeai/v1/lisensi/cek',
   produk: 'mimin',
   // Hanya untuk mode 'edd'
@@ -203,6 +207,7 @@ const LISENSI = {
   // Cek ulang ke server tiap X jam. Kalau server tak terjangkau, tetap boleh pakai selama masa tenggang.
   cekUlangJam: 24,
   masaTenggangHari: 7,
+  // Link checkout produk Mimin di Revo (salin dari dashboard Revo), atau halaman toko BisaPakeAI.
   linkBeli: 'https://bisapakeai.com',
   // HANYA untuk uji lokal. Wajib false di produksi.
   IZINKAN_DEMO: false
@@ -253,11 +258,57 @@ function bacaRespons(j){
   return { valid, pesan, kedaluwarsa: (kedaluwarsa && kedaluwarsa !== 'lifetime') ? kedaluwarsa : null, nama: j.customer_name || j.name || d.name || '' };
 }
 
-async function cekKeServer(kode, email){
+/* ---------- Revo.id: POST /licenses/activate | validate | deactivate ----------
+   Kredensialnya kode lisensi itu sendiri, jadi aman dipanggil dari browser.
+   instance = ID perangkat, supaya batas perangkat (max_activations) di Revo berlaku. */
+const PESAN_REVO = {
+  license_not_found: 'Kode lisensi tidak ditemukan.',
+  instance_not_activated: 'Lisensi belum diaktifkan di perangkat ini.',
+  license_expired: 'Lisensi sudah kedaluwarsa. Perpanjang langganannya di Revo.',
+  license_disabled: 'Lisensi dinonaktifkan oleh penjual.',
+  license_refunded: 'Lisensi tidak berlaku karena pembelian sudah di-refund.',
+  product_mismatch: 'Lisensi ini bukan untuk Mimin.',
+  activation_limit: 'Batas perangkat untuk lisensi ini sudah habis. Lepas lisensi di perangkat lama dulu.',
+  rate_limited: 'Terlalu banyak percobaan. Coba lagi 1 menit lagi.'
+};
+async function panggilRevo(aksi, body, signal){
+  const res = await fetch(LISENSI.revoApi.replace(/\/$/, '') + '/licenses/' + aksi, {
+    method:'POST', signal, headers:{ 'Content-Type':'application/json', 'Accept':'application/json' },
+    body: JSON.stringify(body)
+  });
+  let j = null; try{ j = await res.json(); }catch(e){}
+  return { res, j: j || {} };
+}
+function hasilRevo(res, j, ok){
+  const lic = j.license || (j.data && j.data.license) || {};
+  if(ok) return { valid:true, pesan:'', kedaluwarsa: lic.expires_at || null, nama: '' };
+  const kode = j.reason || j.code || '';
+  const jaringan = res.status >= 500 || res.status === 429;
+  return { jaringan, valid:false, kode, pesan: PESAN_REVO[kode] || j.message || `Server lisensi membalas ${res.status}.` };
+}
+async function cekKeRevo(kode, aktifkan, signal){
+  if(!LISENSI.revoProductId) return { valid:false, pesan:'revoProductId belum diisi di pengaturan LISENSI.' };
+  const dasar = { license_key: kode, product_id: Number(LISENSI.revoProductId), instance: idPerangkat() };
+  if(!aktifkan){
+    const { res, j } = await panggilRevo('validate', dasar, signal);
+    if(res.ok && j.valid === true) return hasilRevo(res, j, true);
+    // Perangkat belum terdaftar (mis. aktivasi direset penjual): coba aktifkan sekali.
+    if(!(res.ok && j.reason === 'instance_not_activated')) return hasilRevo(res, j, false);
+  }
+  const { res, j } = await panggilRevo('activate', { ...dasar, label: (location.hostname || 'lokal') + ' · ' + (navigator.platform || 'perangkat') }, signal);
+  return hasilRevo(res, j, res.ok && j.activated !== false);
+}
+async function lepasDariRevo(kode){
+  if(LISENSI.mode !== 'revo' || !LISENSI.revoProductId) return;
+  try{ await panggilRevo('deactivate', { license_key: kode, product_id: Number(LISENSI.revoProductId), instance: idPerangkat() }); }catch(e){}
+}
+
+async function cekKeServer(kode, email, aktifkan = false){
   const pengendali = new AbortController();
   const batas = setTimeout(() => pengendali.abort(), 15000);
   try{
     let res;
+    if(LISENSI.mode === 'revo') return await cekKeRevo(kode, aktifkan, pengendali.signal);
     if(LISENSI.mode === 'edd'){
       const p = new URLSearchParams({ edd_action: LISENSI.eddAksi, license: kode, item_id: LISENSI.eddItemId, url: location.hostname || 'lokal' });
       res = await fetch(LISENSI.eddSitus.replace(/\/$/, '') + '/?' + p.toString(), { method:'GET', signal: pengendali.signal });
@@ -310,7 +361,7 @@ $('#form-lisensi').addEventListener('submit', async e => {
   if(!/^\S+@\S+\.\S+$/.test(email)){ tampilPesan('Email belum benar.', 'bad'); return; }
   if(kode.length < 6){ tampilPesan('Kode lisensi belum lengkap.', 'bad'); return; }
   const t = $('#lis-tombol'); t.disabled = true; t.textContent = 'Mengecek…';
-  const r = await cekKeServer(kode, email);
+  const r = await cekKeServer(kode, email, true);
   t.disabled = false; t.textContent = 'Aktifkan';
   if(!r.valid){ tampilPesan(r.pesan, 'bad'); return; }
   const l = { kode, email, nama: r.nama, kedaluwarsa: r.kedaluwarsa, dicek: Date.now() };
@@ -321,6 +372,8 @@ $('#form-lisensi').addEventListener('submit', async e => {
 
 function keluarLisensi(){
   if(!confirm('Lepas lisensi dari perangkat ini? Data brand dan riwayat tetap tersimpan.')) return;
+  const l = simpan.baca(K.lisensi, null);
+  if(l && l.kode) lepasDariRevo(l.kode);
   simpan.hapus(K.lisensi);
   tampilGerbang();
 }

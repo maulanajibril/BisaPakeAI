@@ -1,0 +1,14 @@
+{
+  "_catatan": "Satu entri = satu aplikasi seri BisaPakeAI = satu produk Revo. revo_product_id diisi otomatis oleh tools/revo-sync.mjs.",
+  "produk": [
+    {
+      "slug": "mimin",
+      "folder": "mimin",
+      "subdomain": "mimin.bisapakeai.com",
+      "judul": "Mimin: Social Media Management & Corporate Content Creator",
+      "harga": 99000,
+      "deskripsi": "Aplikasi HTML untuk admin media sosial: 15 alat peracik prompt (kalender konten, caption, naskah Reels, balas netizen, mode krisis, laporan bulanan, dll.). Kode lisensi dikirim ke email setelah pembayaran.",
+      "revo_product_id": null
+    }
+  ]
+}

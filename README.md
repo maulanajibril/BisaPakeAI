@@ -53,7 +53,7 @@ const LISENSI = {
 };
 ```
 
-**Samakan dengan endpoint yang dipakai seri Guru.** Dua mode yang didukung:
+**Bawaan sekarang: mode `revo`** (lihat bagian *Lisensi lewat Revo.id* di bawah). Mode lama tetap tersedia:
 
 **`custom`** — aplikasi mengirim `POST` JSON ke `endpoint`:
 
@@ -87,3 +87,40 @@ Catatan: pengecekan di aplikasi HTML statis berjalan di browser, jadi orang yang
 ### Uji lokal
 
 Set `IZINKAN_DEMO: true`, jalankan server lokal (misal `python3 -m http.server` di folder `mimin/`), lalu buka `http://localhost:8000/?demo` untuk melewati lisensi. Kembalikan ke `false` sebelum diunggah.
+
+---
+
+## Lisensi lewat Revo.id
+
+Alur jual tiap seri: pembeli bayar di checkout Revo (QRIS / VA), lalu Revo menerbitkan kode lisensi dan mengirimnya ke email pembeli. Di aplikasi, kode itu diaktifkan langsung ke Revo. Di browser tidak ada API key, karena kredensialnya adalah kode lisensi itu sendiri (lihat [docs/revo-api.md](docs/revo-api.md)).
+
+| Kejadian | Panggilan ke `https://revo.id/api/v1` |
+|---|---|
+| Pengguna menekan **Aktifkan** | `POST /licenses/activate` `{license_key, product_id, instance, label}` |
+| Cek ulang tiap `cekUlangJam` | `POST /licenses/validate`. Kalau `reason = instance_not_activated`, aplikasi otomatis mencoba aktivasi sekali |
+| **Lepas lisensi** | `POST /licenses/deactivate`, supaya slot perangkat kembali kosong |
+
+`instance` = ID acak per perangkat, sehingga batas perangkat (`max_activations`) yang diatur di Revo berlaku. Masa tenggang offline tetap mengikuti `masaTenggangHari`.
+
+### Langkah pasang
+
+1. Di dashboard Revo, buat produk **digital** untuk seri ini, nyalakan lisensinya, lalu atur batas perangkat (misal 3). Cara lainnya: jalankan skrip sinkron di bawah, lalu nyalakan lisensinya di dashboard.
+2. Isi `revoProductId` di blok `LISENSI` (`mimin/index.html`) dengan ID produk tersebut, dan isi `linkBeli` dengan link checkout produknya.
+3. Unggah seperti biasa.
+
+### Skrip sinkron katalog → Revo
+
+`katalog/produk.json` berisi daftar semua seri (satu entri = satu produk Revo). Skrip ini membuat produk yang belum ada (berstatus **draft**), memperbarui produk yang sudah ada, lalu menanam `revoProductId` ke `index.html` setiap seri:
+
+```bash
+node tools/revo-sync.mjs --dry                     # lihat rencana
+REVO_API_KEY=rv_test_xxx node tools/revo-sync.mjs  # sandbox dulu
+```
+
+Butuh Node 20+ dan tidak memerlukan dependensi tambahan. Key hanya dipakai di komputer/server kamu, jangan pernah dimasukkan ke HTML.
+
+### Belum terverifikasi
+
+- **CORS**: dokumentasi Revo tidak menyebut apakah `/licenses/*` boleh dipanggil dari domain lain. Kalau browser menolak, sediakan proxy kecil (misal Cloudflare Worker) di subdomain sendiri, lalu arahkan `revoApi` ke proxy itu.
+- Field untuk menyalakan lisensi saat `POST /products` tidak didokumentasikan, jadi lisensi dinyalakan manual di dashboard.
+- Uji ke sandbox Revo yang sebenarnya belum dilakukan. Alurnya baru diuji dengan server tiruan.
